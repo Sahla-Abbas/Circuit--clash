@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#07111b">
+<title>Circuit Clash: Electronics Quiz Duel</title>
+
+<style>
+/* =========================================================
+   CIRCUIT CLASH — Mobile-first circuit board theme
+   All styling is contained in this file.
+   ========================================================= */
+
+:root {
+  --bg: #07111b;
+  --panel: #0d1c29;
+  --panel-light: #122637;
+  --green: #42ff9e;
+  --blue: #39c8ff;
+  --red: #ff536b;
+  --yellow: #ffe47a;
+  --text: #ecf7ff;
+  --muted: #91a9ba;
+  --border: rgba(110, 200, 235, .2);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body {
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background-image:
+    linear-gradient(rgba(57,200,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57,200,255,.035) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+button, input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.screen {
+  width: 100%;
+  min-height: 100dvh;
+  padding: 20px 14px;
+  animation: appear .35s ease both;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .55; }
+}
+
+@keyframes pop {
+  0% { transform: scale(.96); }
+  65% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(66,255,158,.08); }
+  50% { box-shadow: 0 0 25px rgba(66,255,158,.18); }
+}
+
+.brand {
+  text-align: center;
+  margin: 12px auto 26px;
+}
+
+.chip-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 65px;
+  height: 65px;
+  border: 2px solid var(--green);
+  border-radius: 17px;
+  color: var(--green);
+  font-size: 29px;
+  background: #0a201c;
+  box-shadow: 0 0 24px rgba(66,255,158,.14);
+  margin-bottom: 12px;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: clamp(25px, 7vw, 38px);
+  line-height: 1.12;
+  letter-spacing: -1px;
+}
+
+.brand h1 span {
+  color: var(--green);
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 9px;
+}
+
+.panel {
+  background: rgba(13, 28, 41, .95);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 19px;
+  box-shadow: 0 10px 35px rgba(0,0,0,.15);
+}
+
+.section-title {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--blue);
+  font-weight: 800;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+}
+
+.field-label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 0 7px;
+}
+
+.name-field {
+  width: 100%;
+  min-height: 49px;
+  padding: 12px 14px;
+  color: var(--text);
+  background: #07141f;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  margin-bottom: 15px;
+}
+
+.name-field::placeholder {
+  color: #647e90;
+}
+
+.how-list {
+  padding-left: 20px;
+  margin: 0;
+  color: #c0d3df;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.how-list li::marker {
+  color: var(--green);
+}
+
+.primary-btn {
+  width: 100%;
+  min-height: 54px;
+  border: 0;
+  border-radius: 13px;
+  margin-top: 19px;
+  padding: 14px 18px;
+  color: #03120d;
+  background: linear-gradient(110deg, var(--green), #8affc3);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: .5px;
+  box-shadow: 0 5px 22px rgba(66,255,158,.15);
+  transition: transform .15s, filter .15s;
+}
+
+.primary-btn:active {
+  transform: scale(.98);
+}
+
+.secondary-btn {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 12px;
+  color: var(--blue);
+  background: transparent;
+  border: 1px solid var(--border);
+  margin-top: 10px;
+  font-weight: 750;
+}
+
+.footer-note {
+  color: #698396;
+  text-align: center;
+  font-size: 11px;
+  margin-top: 18px;
+}
+
+/* Game header */
+.game-screen {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 3px 2px;
+}
+
+.mini-brand {
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: .5px;
+}
+
+.mini-brand span {
+  color: var(--green);
+}
+
+.round-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.progress-track {
+  height: 4px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #1b3040;
+}
+
+.progress-fill {
+  width: 0;
+  height: 100%;
+  background: var(--green);
+  transition: width .3s ease;
+}
+
+.question-panel {
+  padding: 14px;
+  text-align: center;
+}
+
+.topic-pill {
+  display: inline-block;
+  border: 1px solid rgba(57,200,255,.35);
+  color: var(--blue);
+  background: rgba(57,200,255,.07);
+  border-radius: 30px;
+  padding: 5px 11px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.question-text {
+  margin: 12px 0 14px;
+  font-size: clamp(17px, 4.7vw, 22px);
+  line-height: 1.38;
+  font-weight: 800;
+}
+
+.timer-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.timer-ring {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--green);
+  color: var(--green);
+  font-weight: 900;
+  font-size: 16px;
+  transition: border-color .2s, color .2s;
+}
+
+.timer-ring.urgent {
+  border-color: var(--red);
+  color: var(--red);
+  animation: pulse .5s infinite;
+}
+
+/* Portrait: players occupy the top and bottom halves.
+   Landscape/wide screens: players occupy left and right halves. */
+.duel-board {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+}
+
+.player-card {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 11px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(13,28,41,.97);
+  transition: border-color .2s, background .2s;
+  overflow: hidden;
+}
+
+.player-card.p1 {
+  border-top: 2px solid var(--green);
+}
+
+.player-card.p2 {
+  border-top: 2px solid var(--blue);
+}
+
+.player-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.player-name {
+  font-size: 13px;
+  font-weight: 900;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.p1 .player-name, .p1 .score {
+  color: var(--green);
+}
+
+.p2 .player-name, .p2 .score {
+  color: var(--blue);
+}
+
+.player-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.score {
+  font-weight: 900;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.answer-status {
+  color: var(--muted);
+  font-size: 10px;
+  text-align: right;
+  min-height: 15px;
+  margin-bottom: 6px;
+}
+
+.answer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  flex: 1;
+  min-height: 0;
+}
+
+.answer-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  min-width: 0;
+  min-height: 40px;
+  padding: 9px 8px;
+  color: #d7e7f0;
+  background: #102535;
+  border: 1px solid rgba(135,184,207,.17);
+  border-radius: 10px;
+  text-align: left;
+  font-size: clamp(11px, 3vw, 14px);
+  line-height: 1.25;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+  transition: background .18s, border-color .18s, transform .18s;
+}
+
+.answer-btn:active:not(:disabled) {
+  transform: scale(.97);
+}
+
+.option-letter {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border-radius: 7px;
+  color: #9bb5c6;
+  background: #203849;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.answer-btn:disabled {
+  cursor: default;
+  opacity: .8;
+}
+
+.answer-btn.selected-correct {
+  color: #03170d;
+  background: var(--green);
+  border-color: var(--green);
+  opacity: 1;
+}
+
+.answer-btn.selected-wrong {
+  color: white;
+  background: #5d2330;
+  border-color: var(--red);
+  opacity: 1;
+}
+
+.answer-btn.reveal-correct {
+  border: 2px solid var(--green);
+}
+
+.answer-btn.selected-correct .option-letter {
+  color: #03170d;
+  background: rgba(0,0,0,.1);
+}
+
+.feedback {
+  margin-top: 8px;
+  min-height: 20px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.feedback.good { color: var(--green); }
+.feedback.bad { color: var(--red); }
+.feedback.neutral { color: var(--yellow); }
+
+.explanation {
+  display: none;
+  padding: 11px 12px;
+  background: rgba(57,200,255,.07);
+  border: 1px solid rgba(57,200,255,.17);
+  border-radius: 11px;
+  color: #c5dce9;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.explanation.visible {
+  display: block;
+  animation: appear .25s ease both;
+}
+
+.next-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2px;
+}
+
+.next-note {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.next-btn {
+  min-height: 42px;
+  padding: 10px 17px;
+  color: #03120d;
+  background: var(--green);
+  border: 0;
+  border-radius: 10px;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.next-btn:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+/* Results */
+.result-hero {
+  text-align: center;
+  padding: 28px 15px;
+}
+
+.trophy {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.result-hero h2 {
+  font-size: 29px;
+  margin: 0 0 7px;
+}
+
+.result-hero p {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0;
+}
+
+.result-score-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.result-score {
+  text-align: center;
+  padding: 20px 10px;
+  background: #0d1c29;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+}
+
+.result-score .big-score {
+  font-size: 32px;
+  font-weight: 950;
+  margin: 8px 0;
+}
+
+.result-score .result-name {
+  color: var(--muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.result-score.p1 .big-score { color: var(--green); }
+.result-score.p2 .big-score { color: var(--blue); }
+
+.stat-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.stat-line:last-child { border-bottom: 0; }
+.stat-line span:first-child { color: var(--muted); }
+
+.history {
+  margin-top: 18px;
+}
+
+.history-item {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.history-item:last-child { border-bottom: 0; }
+
+@media (orientation: landscape) and (min-width: 650px) {
+  .game-screen {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .duel-board {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .player-card {
+    padding: 13px;
+  }
+
+  .answer-btn {
+    font-size: 14px;
+  }
+
+  .question-panel {
+    padding: 10px;
+  }
+
+  .question-text {
+    margin: 7px 0;
+  }
+
+  .timer-ring {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-height: 680px) and (orientation: portrait) {
+  .game-screen { gap: 6px; padding: 7px; }
+  .question-panel { padding: 8px 10px; }
+  .question-text { margin: 7px 0; font-size: 16px; }
+  .timer-ring { width: 30px; height: 30px; font-size: 13px; }
+  .player-card { padding: 8px; }
+  .answer-grid { gap: 5px; }
+  .answer-btn { padding: 6px; min-height: 32px; }
+  .option-letter { width: 19px; height: 19px; }
+  .feedback { margin-top: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- START SCREEN -->
+<main id="startScreen" class="screen">
+  <header class="brand">
+    <div class="chip-icon" aria-hidden="true">⌘</div>
+    <h1>CIRCUIT <span>CLASH</span></h1>
+    <div class="subtitle">ELECTRONICS QUIZ DUEL · TWO PLAYERS · 10 ROUNDS</div>
+  </header>
+
+  <section class="panel">
+    <h2 class="section-title">01 / Identify Players</h2>
+
+    <label class="field-label" for="player1Input">PLAYER 1 — GREEN</label>
+    <input class="name-field" id="player1Input" maxlength="18"
+           placeholder="Enter Player 1 name" value="Player 1">
+
+    <label class="field-label" for="player2Input">PLAYER 2 — BLUE</label>
+    <input class="name-field" id="player2Input" maxlength="18"
+           placeholder="Enter Player 2 name" value="Player 2">
+  </section>
+
+  <section class="panel" style="margin-top:14px">
+    <h2 class="section-title">02 / How to Play</h2>
+    <ol class="how-list">
+      <li>Both players get the same question simultaneously.</li>
+      <li>Each player taps an answer on their own half of the screen.</li>
+      <li>Correct answers earn points based on response speed.</li>
+      <li>Faster correct answers earn more: up to 100 points.</li>
+      <li>Wrong answers earn 0 points. No answer in 10 seconds earns 0.</li>
+      <li>Read the explanation after each round and learn as you play!</li>
+    </ol>
+    <button class="primary-btn" id="startBtn">⚡ START THE DUEL</button>
+  </section>
+
+  <p class="footer-note">40+ QUESTIONS · RANDOMIZED ROUNDS · NO INTERNET NEEDED</p>
+</main>
+
+<!-- GAME SCREEN -->
+<main id="gameScreen" class="screen game-screen hidden">
+  <header class="game-header">
+    <div class="mini-brand">CIRCUIT <span>CLASH</span></div>
+    <div class="round-label" id="roundLabel">ROUND 1 / 10</div>
+  </header>
+
+  <div class="progress-track" aria-label="Game progress">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <section class="panel question-panel">
+    <div class="topic-pill" id="topicLabel">OHM'S LAW</div>
+    <h2 class="question-text" id="questionText">Question appears here.</h2>
+    <div class="timer-row">
+      <div class="timer-ring" id="timerRing">10</div>
+      <span id="timerMessage">Answer before time runs out</span>
+    </div>
+  </section>
+
+  <section class="duel-board">
+    <!-- Player 1: top in portrait, left in landscape -->
+    <article class="player-card p1" id="player1Card">
+      <header class="player-head">
+        <div class="player-name" id="player1Name">Player 1</div>
+        <div class="player-meta">
+          <span class="score" id="player1Score">0 pts</span>
+        </div>
+      </header>
+      <div class="answer-status" id="player1Status">Choose your answer</div>
+      <div class="answer-grid" id="player1Answers"></div>
+      <div class="feedback" id="player1Feedback" aria-live="polite"></div>
+    </article>
+
+    <!-- Player 2: bottom in portrait, right in landscape -->
+    <article class="player-card p2" id="player2Card">
+      <header class="player-head">
+        <div class="player-name" id="player2Name">Player 2</div>
+        <div class="player-meta">
+          <span class="score" id="player2Score">0 pts</span>
+        </div>
+      </header>
+      <div class="answer-status" id="player2Status">Choose your answer</div>
+      <div class="answer-grid" id="player2Answers"></div>
+      <div class="feedback" id="player2Feedback" aria-live="polite"></div>
+    </article>
+  </section>
+
+  <section class="explanation" id="explanation" aria-live="polite"></section>
+
+  <footer class="next-row">
+    <div class="next-note" id="nextNote">Both players can answer now.</div>
+    <button class="next-btn" id="nextBtn" disabled>Next →</button>
+  </footer>
+</main>
+
+<!-- RESULTS SCREEN -->
+<main id="resultsScreen" class="screen hidden">
+  <header class="brand" style="margin-bottom:10px">
+    <div class="chip-icon" aria-hidden="true">⚡</div>
+    <h1>DUEL <span>COMPLETE</span></h1>
+    <div class="subtitle">FINAL RESULTS · 10 ROUNDS</div>
+  </header>
+
+  <section class="panel result-hero">
+    <div class="trophy" id="resultTrophy">🏆</div>
+    <h2 id="winnerText">Winner!</h2>
+    <p id="winnerSubtitle">The circuit champion has been decided.</p>
+  </section>
+
+  <section class="result-score-grid">
+    <article class="result-score p1">
+      <div class="result-name" id="resultPlayer1">Player 1</div>
+      <div class="big-score" id="resultScore1">0</div>
+      <div class="result-name">POINTS</div>
+    </article>
+    <article class="result-score p2">
+      <div class="result-name" id="resultPlayer2">Player 2</div>
+      <div class="big-score" id="resultScore2">0</div>
+      <div class="result-name">POINTS</div>
+    </article>
+  </section>
+
+  <section class="panel" style="margin-top:15px">
+    <h2 class="section-title">Performance Report</h2>
+    <div class="stat-line">
+      <span id="statLabel1">Player 1 correct answers</span>
+      <strong id="statCorrect1">0 / 10</strong>
+    </div>
+    <div class="stat-line">
+      <span id="statLabel2">Player 2 correct answers</span>
+      <strong id="statCorrect2">0 / 10</strong>
+    </div>
+    <div class="stat-line">
+      <span>Fastest correct response</span>
+      <strong id="fastestResponse">—</strong>
+    </div>
+    <div class="stat-line">
+      <span>Questions played</span>
+      <strong>10 / 10</strong>
+    </div>
+  </section>
+
+  <section class="panel history">
+    <h2 class="section-title">Round Review</h2>
+    <div id="roundHistory"></div>
+  </section>
+
+  <button class="primary-btn" id="playAgainBtn">↻ PLAY AGAIN</button>
+  <button class="secondary-btn" id="homeBtn">Back to Start</button>
+</main>
+
+<script>
+"use strict";
+
+/* =========================================================
+   QUESTION BANK
+   Edit this array to add, remove or modify questions.
+   correct = zero-based index of the correct option.
+   Each question must have: topic, q, options, correct, why.
+   Keep exactly four options per question.
+   ========================================================= */
+
+const QUESTIONS = [
+  // RESISTOR COLOUR CODES
+  {
+    topic: "Resistor Colour Code",
+    q: "In a 4-band resistor, what digit does RED represent?",
+    options: ["1", "2", "3", "4"],
+    correct: 1,
+    why: "The standard colour sequence begins Black 0, Brown 1, Red 2, Orange 3, and Yellow 4."
+  },
+  {
+    topic: "Resistor Colour Code",
+    q: "What is the multiplier for the GOLD band?",
+    options: ["× 0.1", "× 1", "× 10", "× 0.01"],
+    correct: 0,
+    why: "Gold is a multiplier of 0.1, meaning the resistance value is multiplied by one-tenth."
+  },
+  {
+    topic: "Resistor Colour Code",
+    q: "What is the resistance of Brown–Black–Red–Gold?",
+    options: ["100 Ω", "1 kΩ", "10 kΩ", "100 kΩ"],
+    correct: 1,
+    why: "Brown = 1, Black = 0, and Red is ×100. So 10 × 100 = 1,000 Ω. Gold indicates ±5% tolerance."
+  },
+  {
+    topic: "Resistor Colour Code",
+    q: "Which colour represents the digit 5?",
+    options: ["Green", "Blue", "Violet", "Grey"],
+    correct: 0,
+    why: "The resistor digit sequence assigns Green = 5, Blue = 6, Violet = 7, Grey = 8, and White = 9."
+  },
+  {
+    topic: "Resistor Colour Code",
+    q: "What tolerance does a GOLD band indicate?",
+    options: ["±1%", "±2%", "±5%", "±10%"],
+    correct: 2,
+    why: "Gold indicates a tolerance of ±5%; silver indicates ±10%."
+  },
+  {
+    topic: "Resistor Colour Code",
+    q: "What is the value of Red–Red–Brown–Gold?",
+    options: ["22 Ω", "220 Ω", "2.2 kΩ", "22 kΩ"],
+    correct: 1,
+    why: "The first two digits are 2 and 2. Brown multiplies by 10, giving 22 × 10 = 220 Ω."
+  },
+  {
+    topic: "Resistor Colour Code",
+    q: "Which colour represents zero in a resistor code?",
+    options: ["Brown", "Black", "Silver", "White"],
+    correct: 1,
+    why: "Black represents the digit 0."
+  },
+  {
+    topic: "Resistor Colour Code",
+    q: "What is the resistance of Yellow–Violet–Orange?",
+    options: ["47 Ω", "470 Ω", "4.7 kΩ", "47 kΩ"],
+    correct: 3,
+    why: "Yellow = 4, Violet = 7, Orange = ×1,000. Therefore 47 × 1,000 = 47 kΩ."
+  },
+
+  // OHM'S LAW AND DC CIRCUITS
+  {
+    topic: "Ohm's Law",
+    q: "What is Ohm's law?",
+    options: ["V = IR", "P = I/R", "I = VR", "R = VI"],
+    correct: 0,
+    why: "Ohm's law states that voltage equals current multiplied by resistance: V = IR."
+  },
+  {
+    topic: "Ohm's Law",
+    q: "A 12 V supply is connected across 6 Ω. What current flows?",
+    options: ["0.5 A", "2 A", "6 A", "72 A"],
+    correct: 1,
+    why: "Using I = V/R, current = 12/6 = 2 A."
+  },
+  {
+    topic: "Ohm's Law",
+    q: "A current of 3 A flows through 4 Ω. Find the voltage.",
+    options: ["0.75 V", "7 V", "12 V", "16 V"],
+    correct: 2,
+    why: "V = IR = 3 × 4 = 12 V."
+  },
+  {
+    topic: "Ohm's Law",
+    q: "What is the SI unit of resistance?",
+    options: ["Ampere", "Volt", "Watt", "Ohm"],
+    correct: 3,
+    why: "Electrical resistance is measured in ohms, represented by the symbol Ω."
+  },
+  {
+    topic: "Ohm's Law",
+    q: "Two 10 Ω resistors are connected in series. Total resistance?",
+    options: ["5 Ω", "10 Ω", "20 Ω", "100 Ω"],
+    correct: 2,
+    why: "Series resistances add directly: Rtotal = 10 + 10 = 20 Ω."
+  },
+  {
+    topic: "Ohm's Law",
+    q: "Two 10 Ω resistors are connected in parallel. Total resistance?",
+    options: ["5 Ω", "10 Ω", "20 Ω", "100 Ω"],
+    correct: 0,
+    why: "For two equal resistors in parallel, equivalent resistance is half either value: 10/2 = 5 Ω."
+  },
+  {
+    topic: "Ohm's Law",
+    q: "What is the electrical power when V = 10 V and I = 2 A?",
+    options: ["5 W", "12 W", "20 W", "100 W"],
+    correct: 2,
+    why: "Power is P = VI = 10 × 2 = 20 W."
+  },
+  {
+    topic: "Ohm's Law",
+    q: "A 1 kΩ resistor has 5 V across it. Find the current.",
+    options: ["5 mA", "50 mA", "500 mA", "5 A"],
+    correct: 0,
+    why: "I = V/R = 5/1,000 A = 0.005 A = 5 mA."
+  },
+
+  // LOGIC GATES
+  {
+    topic: "Logic Gates",
+    q: "An AND gate outputs 1 when:",
+    options: ["Any input is 1", "All inputs are 1", "All inputs are 0", "Inputs differ"],
+    correct: 1,
+    why: "An AND gate outputs HIGH only when every input is HIGH."
+  },
+  {
+    topic: "Logic Gates",
+    q: "What is the output of a NOT gate when its input is 1?",
+    options: ["1", "0", "Undefined", "Alternating 0 and 1"],
+    correct: 1,
+    why: "A NOT gate inverts its input. Input 1 produces output 0."
+  },
+  {
+    topic: "Logic Gates",
+    q: "An OR gate receives inputs 0 and 1. Its output is:",
+    options: ["0", "1", "High impedance", "Invalid"],
+    correct: 1,
+    why: "An OR gate outputs 1 if at least one input is 1."
+  },
+  {
+    topic: "Logic Gates",
+    q: "Which gate is called a universal gate?",
+    options: ["XOR only", "AND only", "NAND", "Buffer"],
+    correct: 2,
+    why: "NAND is universal because any Boolean function can be built using NAND gates alone."
+  },
+  {
+    topic: "Logic Gates",
+    q: "An XOR gate outputs 1 when:",
+    options: ["Both inputs are 0", "Both inputs are 1", "Inputs are different", "Inputs are identical"],
+    correct: 2,
+    why: "XOR outputs HIGH when its inputs differ."
+  },
+  {
+    topic: "Logic Gates",
+    q: "What is the output of a NOR gate for inputs 0 and 0?",
+    options: ["0", "1", "Both 0 and 1", "Cannot be determined"],
+    correct: 1,
+    why: "OR of 0 and 0 is 0. NOR inverts that result to 1."
+  },
+  {
+    topic: "Logic Gates",
+    q: "For a 2-input AND gate, what is 1 AND 0?",
+    options: ["0", "1", "2", "Undefined"],
+    correct: 0,
+    why: "Both inputs must be 1 for an AND gate to output 1."
+  },
+  {
+    topic: "Logic Gates",
+    q: "Which gate produces the complement of an AND gate?",
+    options: ["XOR", "NAND", "NOR", "XNOR"],
+    correct: 1,
+    why: "NAND means NOT-AND: it inverts the output of an AND gate."
+  },
+
+  // DIODES AND TRANSISTORS
+  {
+    topic: "Diodes",
+    q: "What is the main function of a rectifier diode?",
+    options: ["Store charge permanently", "Allow current mainly in one direction", "Amplify every signal", "Measure temperature"],
+    correct: 1,
+    why: "A conventional diode conducts strongly when forward biased and blocks current when reverse biased, within its ratings."
+  },
+  {
+    topic: "Diodes",
+    q: "What is the approximate forward voltage of a silicon diode?",
+    options: ["0.1 V", "0.7 V", "5 V", "12 V"],
+    correct: 1,
+    why: "A silicon diode commonly drops around 0.6–0.7 V at typical operating currents. The exact value varies."
+  },
+  {
+    topic: "Diodes",
+    q: "What does an LED do?",
+    options: ["Emits light", "Measures resistance", "Stores magnetic energy", "Amplifies current without power"],
+    correct: 0,
+    why: "An LED is a light-emitting diode that produces light when forward current flows."
+  },
+  {
+    topic: "Diodes",
+    q: "Which diode is commonly used for voltage regulation?",
+    options: ["Photodiode", "Zener diode", "LED", "Tunnel-free resistor"],
+    correct: 1,
+    why: "A Zener diode can maintain an approximately specified reverse voltage when operated in its breakdown region within its ratings."
+  },
+  {
+    topic: "Transistors",
+    q: "What are the three terminals of a BJT?",
+    options: ["Gate, drain, source", "Anode, cathode, gate", "Emitter, base, collector", "Input, output, ground"],
+    correct: 2,
+    why: "A bipolar junction transistor has emitter, base, and collector terminals."
+  },
+  {
+    topic: "Transistors",
+    q: "Which transistor terminal controls the BJT's collector current?",
+    options: ["Base", "Heat sink", "Case", "Insulator"],
+    correct: 0,
+    why: "In the usual active operating region, a small base current controls a larger collector current."
+  },
+  {
+    topic: "Transistors",
+    q: "Which component is often used as an electronic switch?",
+    options: ["Transistor", "Fuse only", "Transformer core", "Resistor alone"],
+    correct: 0,
+    why: "A transistor can be driven between cutoff and saturation (for a BJT) to perform switching."
+  },
+  {
+    topic: "Transistors",
+    q: "What is the full form of MOSFET?",
+    options: ["Metal Oxide Semiconductor Field Effect Transistor", "Magnetic Output Signal Frequency Electronic Tool", "Modulated Oscillator Signal Feedback Electronic Transmitter", "Metal Output Switching Frequency Element Type"],
+    correct: 0,
+    why: "MOSFET stands for Metal-Oxide-Semiconductor Field-Effect Transistor."
+  },
+
+  // SENSORS
+  {
+    topic: "Temperature Sensors",
+    q: "A thermocouple works mainly on which effect?",
+    options: ["Hall effect", "Seebeck effect", "Piezoelectric effect", "Photoelectric effect"],
+    correct: 1,
+    why: "A temperature difference between dissimilar conductors produces a thermoelectric voltage through the Seebeck effect."
+  },
+  {
+    topic: "Temperature Sensors",
+    q: "What does an RTD measure?",
+    options: ["Pressure", "Light intensity", "Temperature", "Magnetic field"],
+    correct: 2,
+    why: "An RTD measures temperature using the predictable change in a metal's electrical resistance."
+  },
+  {
+    topic: "Temperature Sensors",
+    q: "Which material is commonly used in a Pt100 RTD?",
+    options: ["Copper oxide", "Platinum", "Silicon rubber", "Carbon paper"],
+    correct: 1,
+    why: "Pt100 uses platinum and has a nominal resistance of 100 Ω at 0°C."
+  },
+  {
+    topic: "Temperature Sensors",
+    q: "What is the nominal resistance of a Pt100 at 0°C?",
+    options: ["10 Ω", "50 Ω", "100 Ω", "1,000 Ω"],
+    correct: 2,
+    why: "The number 100 in Pt100 indicates a nominal resistance of 100 Ω at 0°C."
+  },
+  {
+    topic: "Strain Gauges",
+    q: "What does a strain gauge measure?",
+    options: ["Mechanical strain", "Sound frequency only", "Battery voltage only", "Colour"],
+    correct: 0,
+    why: "A strain gauge detects deformation by measuring a change in its electrical resistance."
+  },
+  {
+    topic: "Strain Gauges",
+    q: "A strain gauge commonly has a small change in:",
+    options: ["Resistance", "Atomic number", "Gravity", "Magnetic pole count"],
+    correct: 0,
+    why: "Mechanical strain changes the gauge's geometry and resistivity, causing a measurable resistance change."
+  },
+  {
+    topic: "Sensors",
+    q: "Which sensor is commonly used to detect light?",
+    options: ["LDR", "RTD", "Strain gauge", "Thermocouple"],
+    correct: 0,
+    why: "An LDR, or light-dependent resistor, typically decreases in resistance as light intensity increases."
+  },
+  {
+    topic: "Sensors",
+    q: "Which device commonly detects magnetic fields?",
+    options: ["Hall-effect sensor", "Thermocouple", "LDR", "Pt100"],
+    correct: 0,
+    why: "A Hall-effect sensor detects magnetic fields through a voltage generated across a current-carrying material."
+  },
+
+  // INSTRUMENTATION
+  {
+    topic: "Instrumentation",
+    q: "What is the SI unit of electric current?",
+    options: ["Volt", "Ampere", "Ohm", "Farad"],
+    correct: 1,
+    why: "The ampere (A) is the SI base unit of electric current."
+  },
+  {
+    topic: "Instrumentation",
+    q: "Which instrument measures voltage?",
+    options: ["Ammeter", "Voltmeter", "Wattmeter only", "Ohmmeter only"],
+    correct: 1,
+    why: "A voltmeter measures potential difference and is connected in parallel across the points being measured."
+  },
+  {
+    topic: "Instrumentation",
+    q: "How should an ideal ammeter be connected?",
+    options: ["In series", "In parallel across the supply", "Across an open switch only", "Without completing a circuit"],
+    correct: 0,
+    why: "An ammeter is connected in series so the circuit current passes through it. An ideal ammeter has zero resistance."
+  },
+  {
+    topic: "Instrumentation",
+    q: "What is the purpose of a Wheatstone bridge?",
+    options: ["Generate light", "Measure an unknown resistance", "Convert AC directly into light", "Store digital programs"],
+    correct: 1,
+    why: "A Wheatstone bridge determines an unknown resistance by balancing two branches of a bridge circuit."
+  },
+  {
+    topic: "Instrumentation",
+    q: "What does ADC stand for?",
+    options: ["Automatic Diode Control", "Analog-to-Digital Converter", "Alternating Drive Circuit", "Amplified Data Coil"],
+    correct: 1,
+    why: "An ADC converts an analog signal into a digital representation."
+  },
+  {
+    topic: "Instrumentation",
+    q: "What is the purpose of an operational amplifier?",
+    options: ["Amplify the difference between two input voltages", "Measure temperature directly without a sensor", "Generate mechanical force only", "Replace all resistors"],
+    correct: 0,
+    why: "An op-amp amplifies the voltage difference between its non-inverting and inverting inputs, subject to its circuit configuration."
+  },
+  {
+    topic: "Instrumentation",
+    q: "What does calibration compare?",
+    options: ["An instrument against a reference standard", "A battery against a resistor's colour", "Two unrelated circuit boards", "Only the instrument's physical size"],
+    correct: 0,
+    why: "Calibration establishes the relationship between an instrument's readings and a known reference."
+  },
+  {
+    topic: "Instrumentation",
+    q: "Which unit is used for capacitance?",
+    options: ["Henry", "Farad", "Tesla", "Weber"],
+    correct: 1,
+    why: "Capacitance is measured in farads (F). Inductance is measured in henries (H)."
+  },
+  {
+    topic: "Instrumentation",
+    q: "What does sensitivity describe in a measuring instrument?",
+    options: ["Output change per input change", "Its physical weight only", "The number of switches", "Its supply cable length"],
+    correct: 0,
+    why: "Sensitivity describes how much an instrument's output changes for a given change in the measured input."
+  },
+  {
+    topic: "Instrumentation",
+    q: "Which instrument displays voltage changing over time?",
+    options: ["Oscilloscope", "Fixed resistor", "Fuse", "Potentiometer alone"],
+    correct: 0,
+    why: "An oscilloscope displays electrical signals, commonly voltage versus time."
+  },
+  {
+    topic: "Instrumentation",
+    q: "What does a low-pass filter do?",
+    options: ["Passes low frequencies and attenuates high frequencies", "Passes only high frequencies", "Converts DC into mechanical energy", "Increases every frequency equally"],
+    correct: 0,
+    why: "A low-pass filter allows frequencies below its cutoff region to pass more readily than higher frequencies."
+  },
+  {
+    topic: "Instrumentation",
+    q: "What is the common unit of frequency?",
+    options: ["Ohm", "Hertz", "Coulomb", "Volt"],
+    correct: 1,
+    why: "Frequency is measured in hertz (Hz), equivalent to cycles per second."
+  }
+];
+
+/* =========================================================
+   GAME STATE
+   ========================================================= */
+
+const TOTAL_ROUNDS = 10;
+const ROUND_SECONDS = 10;
+
+const $ = id => document.getElementById(id);
+
+const state = {
+  names: ["Player 1", "Player 2"],
+  scores: [0, 0],
+  correctCounts: [0, 0],
+  answers: [null, null],
+  round: 0,
+  questions: [],
+  roundStartedAt: 0,
+  timerInterval: null,
+  deadlineTimeout: null,
+  roundLocked: false,
+  history: [],
+  fastest: null,
+  audioContext: null
+};
+
+/* =========================================================
+   AUDIO FEEDBACK — Web Audio API, no sound files needed.
+   Browsers usually require a user gesture before audio starts.
+   ========================================================= */
+
+function playTone(kind) {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+
+    if (!state.audioContext) {
+      state.audioContext = new AudioCtx();
+    }
+
+    const ctx = state.audioContext;
+    if (ctx.state === "suspended") ctx.resume();
+
+    const now = ctx.currentTime;
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+
+    if (kind === "correct") {
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(660, now);
+      oscillator.frequency.setValueAtTime(880, now + 0.09);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      oscillator.start(now);
+      oscillator.stop(now + 0.23);
+    } else if (kind === "wrong") {
+      oscillator.type = "triangle";
+      oscillator.frequency.setValueAtTime(240, now);
+      oscillator.frequency.exponentialRampToValueAtTime(140, now + 0.16);
+      gain.gain.setValueAtTime(0.10, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+      oscillator.start(now);
+      oscillator.stop(now + 0.19);
+    } else {
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(440, now);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+      oscillator.start(now);
+      oscillator.stop(now + 0.13);
+    }
+  } catch (error) {
+    // Audio is optional; gameplay still works if audio is unavailable.
+  }
+}
+
+/* =========================================================
+   GAME INITIALIZATION
+   ========================================================= */
+
+function shuffle(array) {
+  const copy = [...array];
+
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+
+  return copy;
+}
+
+function startGame() {
+  if (QUESTIONS.length < TOTAL_ROUNDS) {
+    alert("Add at least 10 questions to the QUESTIONS array.");
+    return;
+  }
+
+  // Read names and prevent blank player labels.
+  state.names = [
+    $("player1Input").value.trim() || "Player 1",
+    $("player2Input").value.trim() || "Player 2"
+  ];
+
+  // Reset every game statistic.
+  state.scores = [0, 0];
+  state.correctCounts = [0, 0];
+  state.answers = [null, null];
+  state.round = 0;
+  state.history = [];
+  state.fastest = null;
+  state.roundLocked = false;
+
+  clearRoundTimers();
+
+  // Select 10 distinct questions for this game.
+  state.questions = shuffle(QUESTIONS).slice(0, TOTAL_ROUNDS);
+
+  $("startScreen").classList.add("hidden");
+  $("resultsScreen").classList.add("hidden");
+  $("gameScreen").classList.remove("hidden");
+
+  $("player1Name").textContent = state.names[0];
+  $("player2Name").textContent = state.names[1];
+
+  renderRound();
+}
+
+function clearRoundTimers() {
+  clearInterval(state.timerInterval);
+  clearTimeout(state.deadlineTimeout);
+  state.timerInterval = null;
+  state.deadlineTimeout = null;
+}
+
+/* =========================================================
+   ROUND RENDERING
+   ========================================================= */
+
+function renderRound() {
+  clearRoundTimers();
+
+  state.roundLocked = false;
+  state.answers = [null, null];
+
+  const question = state.questions[state.round];
+
+  $("roundLabel").textContent =
+    `ROUND ${state.round + 1} / ${TOTAL_ROUNDS}`;
+
+  $("progressFill").style.width =
+    `${(state.round / TOTAL_ROUNDS) * 100}%`;
+
+  $("topicLabel").textContent = question.topic;
+  $("questionText").textContent = question.q;
+
+  $("timerRing").textContent = ROUND_SECONDS;
+  $("timerRing").classList.remove("urgent");
+  $("timerMessage").textContent = "Answer before time runs out";
+
+  $("explanation").textContent = "";
+  $("explanation").classList.remove("visible");
+
+  $("nextNote").textContent = "Both players can answer now.";
+  $("nextBtn").disabled = true;
+  $("nextBtn").textContent =
+    state.round === TOTAL_ROUNDS - 1 ? "Results →" : "Next →";
+
+  for (let p = 0; p < 2; p++) {
+    $(`player${p + 1}Score`).textContent =
+      `${state.scores[p]} pts`;
+
+    $(`player${p + 1}Status`).textContent = "Choose your answer";
+    $(`player${p + 1}Feedback`).textContent = "";
+    $(`player${p + 1}Feedback`).className = "feedback";
+
+    const container = $(`player${p + 1}Answers`);
+    container.replaceChildren();
+
+    question.options.forEach((option, index) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "answer-btn";
+
+      const letter = document.createElement("span");
+      letter.className = "option-letter";
+      letter.textContent = String.fromCharCode(65 + index);
+
+      const text = document.createElement("span");
+      text.textContent = option;
+
+      button.append(letter, text);
+
+      // Each player can only select from their own answer grid.
+      button.addEventListener("click", () => submitAnswer(p, index));
+
+      container.appendChild(button);
+    });
+  }
+
+  state.roundStartedAt = performance.now();
+
+  // A single shared deadline prevents the second player getting
+  // extra time after the first player has answered.
+  state.timerInterval = setInterval(updateTimer, 100);
+  state.deadlineTimeout = setTimeout(endRound, ROUND_SECONDS * 1000);
+}
+
+function updateTimer() {
+  if (state.roundLocked) return;
+
+  const elapsed = (performance.now() - state.roundStartedAt) / 1000;
+  const remaining = Math.max(0, ROUND_SECONDS - elapsed);
+  const display = Math.ceil(remaining);
+
+  $("timerRing").textContent = display;
+
+  if (remaining <= 3) {
+    $("timerRing").classList.add("urgent");
+    $("timerMessage").textContent = "Hurry!";
+  } else {
+    $("timerRing").classList.remove("urgent");
+  }
+}
+
+/* =========================================================
+   ANSWER SUBMISSION AND SCORING
+   ========================================================= */
+
+function submitAnswer(playerIndex, optionIndex) {
+  if (state.roundLocked || state.answers[playerIndex] !== null) {
+    return;
+  }
+
+  const question = state.questions[state.round];
+  const elapsed = Math.max(
+    0,
+    (performance.now() - state.roundStartedAt) / 1000
+  );
+
+  const correct = optionIndex === question.correct;
+
+  // Scoring: 100 points at the start, falling linearly to 10
+  // points at the 10-second deadline. Wrong answers score 0.
+  let points = 0;
+
+  if (correct) {
+    const speedFraction = Math.max(
+      0,
+      Math.min(1, 1 - elapsed / ROUND_SECONDS)
+    );
+
+    points = Math.round(10 + 90 * speedFraction);
+    state.scores[playerIndex] += points;
+    state.correctCounts[playerIndex]++;
+  }
+
+  state.answers[playerIndex] = {
+    optionIndex,
+    correct,
+    points,
+    elapsed
+  };
+
+  if (correct) {
+    playTone("correct");
+
+    if (!state.fastest || elapsed < state.fastest.elapsed) {
+      state.fastest = {
+        player: playerIndex,
+        elapsed,
+        round: state.round + 1
+      };
+    }
+  } else {
+    playTone("wrong");
+  }
+
+  updatePlayerFeedback(playerIndex);
+
+  // Once both have answered, reveal the solution immediately.
+  if (state.answers.every(answer => answer !== null)) {
+    endRound();
+  }
+}
+
+function updatePlayerFeedback(playerIndex) {
+  const answer = state.answers[playerIndex];
+  const card = $(`player${playerIndex + 1}Card`);
+  const feedback = $(`player${playerIndex + 1}Feedback`);
+  const status = $(`player${playerIndex + 1}Status`);
+  const buttons = $(`player${playerIndex + 1}Answers`).querySelectorAll("button");
+
+  buttons.forEach((button, index) => {
+    button.disabled = true;
+
+    if (index === answer.optionIndex) {
+      button.classList.add(
+        answer.correct ? "selected-correct" : "selected-wrong"
+      );
+    }
+  });
+
+  if (answer.correct) {
+    feedback.textContent = `✓ CORRECT  +${answer.points} PTS`;
+    feedback.className = "feedback good";
+    status.textContent = `Answered in ${answer.elapsed.toFixed(2)}s`;
+  } else {
+    feedback.textContent = "✕ WRONG  +0 PTS";
+    feedback.className = "feedback bad";
+    status.textContent = "Answer locked";
+  }
+
+  $(`player${playerIndex + 1}Score`).textContent =
+    `${state.scores[playerIndex]} pts`;
+
+  card.style.animation = "pop .25s ease";
+  setTimeout(() => {
+    card.style.animation = "";
+  }, 280);
+}
+
+/* =========================================================
+   ROUND COMPLETION
+   ========================================================= */
+
+function endRound() {
+  if (state.roundLocked) return;
+
+  state.roundLocked = true;
+  clearRoundTimers();
+
+  const question = state.questions[state.round];
+
+  // Any player who did not answer receives zero points.
+  for (let p = 0; p < 2; p++) {
+    if (state.answers[p] === null) {
+      state.answers[p] = {
+        optionIndex: null,
+        correct: false,
+        points: 0,
+        elapsed: ROUND_SECONDS,
+        timeout: true
+      };
+
+      $(`player${p + 1}Status`).textContent = "Time expired";
+      $(`player${p + 1}Feedback`).textContent = "⌛ TIME UP  +0 PTS";
+      $(`player${p + 1}Feedback`).className = "feedback neutral";
+
+      $(`player${p + 1}Answers`)
+        .querySelectorAll("button")
+        .forEach(button => button.disabled = true);
+    }
+  }
+
+  // Reveal the correct answer to both players.
+  for (let p = 0; p < 2; p++) {
+    const buttons = $(`player${p + 1}Answers`).querySelectorAll("button");
+    buttons[question.correct].classList.add("reveal-correct");
+  }
+
+  $("timerRing").textContent = "✓";
+  $("timerMessage").textContent = "Round complete";
+
+  $("explanation").textContent =
+    `WHY THIS IS CORRECT: ${question.why}`;
+
+  $("explanation").classList.add("visible");
+
+  $("progressFill").style.width =
+    `${((state.round + 1) / TOTAL_ROUNDS) * 100}%`;
+
+  state.history.push({
+    question: question.q,
+    topic: question.topic,
+    correctAnswer: question.options[question.correct],
+    answers: state.answers.map(a => ({ ...a })),
+    scores: [...state.scores]
+  });
+
+  $("nextNote").textContent =
+    state.round === TOTAL_ROUNDS - 1
+      ? "All 10 rounds completed."
+      : "Review the explanation before continuing.";
+
+  $("nextBtn").disabled = false;
+
+  if (state.round === TOTAL_ROUNDS - 1) {
+    $("nextBtn").textContent = "View Results →";
+  }
+}
+
+function nextRound() {
+  if (!state.roundLocked) return;
+
+  if (state.round >= TOTAL_ROUNDS - 1) {
+    showResults();
+    return;
+  }
+
+  state.round++;
+  renderRound();
+}
+
+/* =========================================================
+   RESULTS
+   ========================================================= */
+
+function showResults() {
+  clearRoundTimers();
+
+  $("gameScreen").classList.add("hidden");
+  $("resultsScreen").classList.remove("hidden");
+
+  $("resultPlayer1").textContent = state.names[0];
+  $("resultPlayer2").textContent = state.names[1];
+
+  $("resultScore1").textContent = state.scores[0];
+  $("resultScore2").textContent = state.scores[1];
+
+  $("statLabel1").textContent = `${state.names[0]} correct answers`;
+  $("statLabel2").textContent = `${state.names[1]} correct answers`;
+
+  $("statCorrect1").textContent = `${state.correctCounts[0]} / 10`;
+  $("statCorrect2").textContent = `${state.correctCounts[1]} / 10`;
+
+  if (state.scores[0] > state.scores[1]) {
+    $("winnerText").textContent = `${state.names[0]} Wins!`;
+    $("winnerSubtitle").textContent = "Excellent speed and electronics knowledge.";
+    $("resultTrophy").textContent = "🏆";
+  } else if (state.scores[1] > state.scores[0]) {
+    $("winnerText").textContent = `${state.names[1]} Wins!`;
+    $("winnerSubtitle").textContent = "Excellent speed and electronics knowledge.";
+    $("resultTrophy").textContent = "🏆";
+  } else {
+    $("winnerText").textContent = "It's a Draw!";
+    $("winnerSubtitle").textContent = "Both players finished with the same score.";
+    $("resultTrophy").textContent = "⚡";
+  }
+
+  if (state.fastest) {
+    $("fastestResponse").textContent =
+      `${state.names[state.fastest.player]} · ` +
+      `${state.fastest.elapsed.toFixed(2)}s (R${state.fastest.round})`;
+  } else {
+    $("fastestResponse").textContent = "No correct answers";
+  }
+
+  const historyContainer = $("roundHistory");
+  historyContainer.replaceChildren();
+
+  state.history.forEach((entry, index) => {
+    const row = document.createElement("div");
+    row.className = "history-item";
+
+    const title = document.createElement("strong");
+    title.textContent = `${index + 1}. ${entry.topic}`;
+
+    const question = document.createElement("div");
+    question.textContent = entry.question;
+    question.style.margin = "4px 0";
+
+    const answer = document.createElement("div");
+    answer.style.color = "var(--green)";
+    answer.textContent = `Correct answer: ${entry.correctAnswer}`;
+
+    const scores = document.createElement("div");
+    scores.style.color = "var(--muted)";
+    scores.textContent =
+      `${state.names[0]}: ${entry.answers[0].points} pts · ` +
+      `${state.names[1]}: ${entry.answers[1].points} pts`;
+
+    row.append(title, question, answer, scores);
+    historyContainer.appendChild(row);
+  });
+}
+
+function backToStart() {
+  clearRoundTimers();
+
+  $("resultsScreen").classList.add("hidden");
+  $("gameScreen").classList.add("hidden");
+  $("startScreen").classList.remove("hidden");
+}
+
+/* =========================================================
+   EVENT LISTENERS
+   ========================================================= */
+
+$("startBtn").addEventListener("click", startGame);
+$("nextBtn").addEventListener("click", nextRound);
+$("playAgainBtn").addEventListener("click", startGame);
+$("homeBtn").addEventListener("click", backToStart);
+
+// Prevent Enter from submitting anything unexpectedly.
+document.querySelectorAll("input").forEach(input => {
+  input.addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      input.blur();
+    }
+  });
+});
+</script>
+
+</body>
+</html>
