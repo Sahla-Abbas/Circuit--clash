@@ -212,7 +212,21 @@ const CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const $ = id => document.getElementById(id);
 const screens = {home:$("home"),lobby:$("lobby"),question:$("question"),reveal:$("reveal"),final:$("final"),closed:$("closed")};
 
-const playerId = Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+/* The player id is remembered on this device, so a page refresh
+   (or a screen lock) lets you return to the same room. */
+let playerId = null;
+try { playerId = localStorage.getItem("cc_pid"); } catch (e) {}
+if (!playerId) {
+  playerId = Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+  try { localStorage.setItem("cc_pid", playerId); } catch (e) {}
+}
+function saveSession(code, name) {
+  try {
+    if (code) localStorage.setItem("cc_sess", JSON.stringify({code: code, name: name, t: Date.now()}));
+    else localStorage.removeItem("cc_sess");
+  } catch (e) {}
+}
+
 let roomCode = null, isHost = false, myName = "", players = {}, phase = "-", hostId = null;
 let game = null, answers = {}, reveal = null;
 let stopListen = null, leaving = false, busy = false, rejoining = false, noticeTimer = null;
@@ -460,6 +474,9 @@ function renderQuestion() {
   const ans = answers[game.round] || {};
   const n = Object.keys(players).filter(id => ans[id]).length;
   $("ansCount").textContent = n + " / " + Object.keys(players).length + " answered";
+  /* After a refresh, restore the answer this player already gave. */
+  const given = ans[playerId];
+  if (given && myAns.round !== game.round) myAns = {round: game.round, c: given.c};
   updateQ(); startTick(); show("question");
 }
 function updateQ() {
@@ -518,7 +535,7 @@ function renderFinal() {
   show("final");
 }
 
-/* ---------- create / join / leave ---------- */
+/* ---------- create / join / resume / leave ---------- */
 async function createRoom() {
   if (busy) return;
   setBusy(true);
@@ -532,6 +549,7 @@ async function createRoom() {
     roomCode = code; isHost = true; leaving = false; phase = "lobby";
     await armPresence();
     history.replaceState({}, "", inviteUrl(code));
+    saveSession(code, myName);
     listen(code); dbg("Room " + code + " created");
   } catch (e) { roomCode = null; notice(e.message || "Could not create the room."); }
   setBusy(false);
@@ -546,19 +564,50 @@ async function joinRoom() {
     const snap = await get(ref(db, "rooms/" + code));
     if (!snap.exists()) throw new Error("Room " + code + " was not found. Check the code, and make sure the host is still online.");
     const r = snap.val();
-    if ((r.phase || "lobby") !== "lobby") throw new Error("This game has already started. Ask the host for a new round.");
     const pl = r.players || {};
+    if (pl[playerId]) {
+      /* Already a member of this room (for example after a refresh). */
+      await resumeInto(code, r);
+      setBusy(false);
+      return;
+    }
+    if ((r.phase || "lobby") !== "lobby") throw new Error("This game has already started. Ask the host for a new round.");
     if (Object.keys(pl).length >= MAX) throw new Error("This room is full (6 players).");
     myName = uniqueName(myName, pl);
     await set(ref(db, "rooms/" + code + "/players/" + playerId), {name: myName, joinedAt: Date.now(), score: 0, correct: 0});
     roomCode = code; isHost = false; leaving = false; phase = "lobby";
     await armPresence();
     history.replaceState({}, "", inviteUrl(code));
+    saveSession(code, myName);
     listen(code); notice("Joined room " + code + " as " + myName, true);
   } catch (e) { roomCode = null; notice(e.message || "Could not join the room."); }
   setBusy(false);
 }
+async function resumeInto(code, r) {
+  roomCode = code; leaving = false;
+  phase = r.phase || "lobby";
+  isHost = r.hostId === playerId;
+  myName = r.players[playerId].name;
+  await armPresence();
+  history.replaceState({}, "", inviteUrl(code));
+  saveSession(code, myName);
+  listen(code);
+  notice("Reconnected to room " + code, true);
+}
+async function resume() {
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem("cc_sess") || "null"); } catch (e) {}
+  if (!s || !s.code || Date.now() - s.t > 6 * 3600 * 1000) return;
+  try {
+    const snap = await get(ref(db, "rooms/" + s.code));
+    if (!snap.exists()) { saveSession(null); return; }
+    const r = snap.val();
+    if (!r.players || !r.players[playerId]) { saveSession(null); return; }
+    await resumeInto(s.code, r);
+  } catch (e) { dbg("Resume failed: " + e.message); }
+}
 function cleanup() {
+  saveSession(null);
   if (stopListen) stopListen(); stopListen = null; stopTick();
   clearTimeout(revTimer); clearTimeout(nextTimer);
   roomCode = null; isHost = false; players = {}; phase = "-"; game = null; armedLobby = false;
@@ -603,6 +652,7 @@ $("roomIn").addEventListener("input", e => { e.target.value = e.target.value.toU
 $("roomIn").addEventListener("keydown", e => { if (e.key === "Enter") joinRoom(); });
 const urlRoom = new URLSearchParams(location.search).get("room");
 if (urlRoom) { $("roomIn").value = urlRoom.toUpperCase().slice(0, 4); $("name").focus(); }
+resume();
 </script>
 </body>
 </html>
