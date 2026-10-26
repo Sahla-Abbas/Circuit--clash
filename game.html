@@ -1,1078 +1,387 @@
- 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#07111f" />
-  <title>Circuit Clash | Multiplayer Quiz</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #07111f;
-      --panel: #101d30;
-      --panel2: #0b1728;
-      --green: #55ff9b;
-      --blue: #39c8ff;
-      --text: #eef7ff;
-      --muted: #9aafc7;
-      --red: #ff657a;
-      --border: #243952;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      background:
-        radial-gradient(ellipse at 50% 0%, #123047 0%, transparent 52%),
-        linear-gradient(#07111f, #081423);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      background-attachment: fixed;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: .13;
-      background-image:
-        linear-gradient(#2d6680 1px, transparent 1px),
-        linear-gradient(90deg, #2d6680 1px, transparent 1px);
-      background-size: 28px 28px;
-      mask-image: linear-gradient(to bottom, black, transparent 90%);
-    }
-
-    button, input { font: inherit; }
-    button { cursor: pointer; touch-action: manipulation; }
-    button:disabled { opacity: .4; cursor: not-allowed; }
-
-    .app {
-      position: relative;
-      width: min(100% - 28px, 520px);
-      margin: 0 auto;
-      padding: 24px 0 calc(34px + env(safe-area-inset-bottom));
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 30px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      font-size: 18px;
-      font-weight: 900;
-      letter-spacing: 1.4px;
-    }
-
-    .logo {
-      display: grid;
-      place-items: center;
-      width: 42px;
-      height: 42px;
-      border: 1px solid var(--green);
-      border-radius: 12px;
-      color: var(--green);
-      background: #102b2b;
-      box-shadow: 0 0 20px #55ff9b22;
-      font-size: 24px;
-    }
-
-    .connection {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 750;
-      white-space: nowrap;
-    }
-
-    .dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: #8191a5;
-      box-shadow: 0 0 9px currentColor;
-    }
-    .dot.online { background: var(--green); color: var(--green); }
-    .dot.offline { background: var(--red); color: var(--red); }
-
-    .eyebrow {
-      color: var(--green);
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 12px 0;
-      font-size: clamp(34px, 9vw, 49px);
-      line-height: 1.05;
-      letter-spacing: -1.8px;
-    }
-
-    h1 span {
-      color: var(--green);
-      text-shadow: 0 0 25px #55ff9b25;
-    }
-
-    h2 { margin: 0; font-size: 20px; }
-    p { color: var(--muted); line-height: 1.6; }
-
-    .hero { margin-bottom: 25px; }
-    .hero p { margin: 10px 0 0; font-size: 14px; }
-
-    .card {
-      padding: 20px;
-      margin-bottom: 15px;
-      border: 1px solid var(--border);
-      border-radius: 19px;
-      background: linear-gradient(145deg, #122139f5, #0b1728f5);
-      box-shadow: 0 12px 35px #00000020;
-    }
-
-    .card-title {
-      margin-bottom: 17px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: #c2d5e9;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    input {
-      display: block;
-      width: 100%;
-      min-height: 53px;
-      padding: 14px;
-      border: 1px solid #304966;
-      border-radius: 11px;
-      outline: none;
-      color: var(--text);
-      background: #071321;
-      font-size: 16px;
-    }
-
-    input:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px #39c8ff17;
-    }
-
-    .field { margin-bottom: 15px; }
-
-    .btn {
-      width: 100%;
-      min-height: 52px;
-      padding: 13px 16px;
-      border: 1px solid transparent;
-      border-radius: 11px;
-      font-size: 14px;
-      font-weight: 900;
-      transition: transform .12s, filter .12s;
-    }
-
-    .btn:active:not(:disabled) { transform: scale(.985); }
-    .btn-primary {
-      color: #062015;
-      background: var(--green);
-      box-shadow: 0 5px 22px #55ff9b1c;
-    }
-    .btn-blue { color: #041925; background: var(--blue); }
-    .btn-secondary {
-      color: var(--text);
-      background: #14253a;
-      border-color: #304760;
-    }
-    .btn-danger {
-      color: #ffb5c0;
-      background: #321b2a;
-      border-color: #683143;
-    }
-
-    .join-row {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    .room-input {
-      text-transform: uppercase;
-      letter-spacing: 5px;
-      font-weight: 900;
-      text-align: center;
-    }
-
-    .separator {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 20px 0;
-      color: #70859d;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
-    .separator::before, .separator::after {
-      content: "";
-      height: 1px;
-      flex: 1;
-      background: var(--border);
-    }
-
-    .notice {
-      display: none;
-      padding: 13px 14px;
-      margin-bottom: 16px;
-      border: 1px solid #a44358;
-      border-radius: 11px;
-      color: #ffc2cc;
-      background: #321724;
-      font-size: 13px;
-      line-height: 1.5;
-      overflow-wrap: anywhere;
-    }
-    .notice.show { display: block; }
-
-    .success {
-      border-color: #287b57;
-      color: #aaffcd;
-      background: #102c25;
-    }
-
-    .hidden { display: none !important; }
-
-    .room-heading { text-align: center; }
-    .room-heading h2 { margin: 8px 0; }
-    .room-code {
-      margin: 17px 0 13px;
-      color: var(--green);
-      font-size: clamp(43px, 14vw, 62px);
-      font-weight: 950;
-      letter-spacing: 10px;
-      line-height: 1.15;
-      text-indent: 10px;
-      text-shadow: 0 0 28px #55ff9b22;
-      overflow-wrap: anywhere;
-    }
-
-    .room-subtitle { margin: 0 0 17px; font-size: 13px; }
-
-    .action-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .players-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    .count {
-      padding: 6px 10px;
-      border: 1px solid #28536c;
-      border-radius: 20px;
-      color: var(--blue);
-      background: #0d293b;
-      font-size: 12px;
-      font-weight: 900;
-    }
-
-    .player-list {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-    }
-
-    .player {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-      padding: 12px;
-      border: 1px solid #253d55;
-      border-radius: 12px;
-      background: #0a1727;
-    }
-
-    .avatar {
-      display: grid;
-      place-items: center;
-      flex: 0 0 40px;
-      height: 40px;
-      border: 1px solid #28665c;
-      border-radius: 12px;
-      color: var(--green);
-      background: #102b2b;
-      font-weight: 900;
-    }
-
-    .player-info { flex: 1; min-width: 0; }
-    .player-name {
-      overflow-wrap: anywhere;
-      font-size: 14px;
-      font-weight: 850;
-    }
-    .player-status {
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .host-tag {
-      padding: 5px 7px;
-      border-radius: 7px;
-      color: #b6ffda;
-      background: #153b30;
-      font-size: 9px;
-      font-weight: 950;
-      letter-spacing: .7px;
-    }
-
-    .waiting {
-      padding: 13px;
-      margin-top: 15px;
-      border: 1px dashed #2a4963;
-      border-radius: 11px;
-      color: #a9c4db;
-      text-align: center;
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .lobby-actions { display: grid; gap: 10px; }
-    .footnote {
-      margin-top: 8px;
-      text-align: center;
-      font-size: 11px;
-    }
-
-    .placeholder {
-      padding: 30px 18px;
-      text-align: center;
-    }
-
-    .placeholder-icon {
-      font-size: 54px;
-      color: var(--green);
-      margin: 10px 0 20px;
-    }
-
-    .debug {
-      margin-top: auto;
-      padding-top: 24px;
-      color: #70859c;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 10px;
-      line-height: 1.8;
-      overflow-wrap: anywhere;
-    }
-
-    .debug strong { color: #a5bdd4; }
-    footer {
-      margin-top: 8px;
-      color: #4f657c;
-      font-size: 10px;
-      text-align: center;
-    }
-
-    @media (min-width: 480px) {
-      .join-row { grid-template-columns: 1fr 125px; }
-      .app { padding-top: 32px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>Circuit Clash | Multiplayer Quiz</title>
+<style>
+:root{--bg:#07111f;--green:#55ff9b;--blue:#39c8ff;--text:#eef7ff;--muted:#9aafc7;--red:#ff657a;--border:#243952}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--text);background:linear-gradient(#07111f,#081423);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input{font:inherit}button{cursor:pointer;touch-action:manipulation}button:disabled{opacity:.45}
+.app{width:calc(100% - 28px);max-width:520px;margin:0 auto;padding:20px 0 34px;min-height:100vh;display:flex;flex-direction:column}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.brand{font-size:18px;font-weight:900;letter-spacing:1.4px}.brand span{color:var(--green)}
+.conn{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px;font-weight:700}
+.dot{width:9px;height:9px;border-radius:50%;background:#8191a5}.dot.on{background:var(--green)}.dot.off{background:var(--red)}
+h1{margin:6px 0 10px;font-size:clamp(32px,9vw,46px);line-height:1.05;letter-spacing:-1.5px}h1 span{color:var(--green)}
+h2{margin:0;font-size:20px}p{color:var(--muted);line-height:1.6;margin:8px 0}
+.card{padding:20px;margin-bottom:14px;border:1px solid var(--border);border-radius:18px;background:#101d30}
+label{display:block;margin-bottom:8px;color:#c2d5e9;font-size:12px;font-weight:800}
+input{display:block;width:100%;min-height:52px;padding:13px;border:1px solid #304966;border-radius:11px;outline:none;color:var(--text);background:#071321;font-size:16px}
+input:focus{border-color:var(--blue)}
+.field{margin-bottom:14px}
+.btn{width:100%;min-height:52px;padding:12px 16px;border:1px solid transparent;border-radius:11px;font-size:15px;font-weight:900}
+.p{color:#062015;background:var(--green)}.b{color:#041925;background:var(--blue)}
+.s{color:var(--text);background:#14253a;border-color:#304760}.d{color:#ffb5c0;background:#321b2a;border-color:#683143}
+.room-input{text-transform:uppercase;letter-spacing:6px;font-weight:900;text-align:center}
+.sep{margin:18px 0;color:#70859d;font-size:11px;font-weight:800;text-align:center;letter-spacing:2px}
+#notice{display:none;position:fixed;z-index:50;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));max-width:496px;margin:0 auto;padding:14px 16px;border:1px solid #a44358;border-radius:12px;color:#ffd0d8;background:#3a1626;font-size:14px;line-height:1.5;box-shadow:0 8px 30px #000a}
+#notice.show{display:block}#notice.ok{border-color:#287b57;color:#aaffcd;background:#0f3026}
+.hidden{display:none!important}
+.center{text-align:center}
+.code{margin:14px 0;color:var(--green);font-size:clamp(42px,14vw,60px);font-weight:950;letter-spacing:10px;text-indent:10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.count{padding:6px 10px;border:1px solid #28536c;border-radius:20px;color:var(--blue);background:#0d293b;font-size:12px;font-weight:900}
+.list{display:flex;flex-direction:column;gap:9px}
+.player{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #253d55;border-radius:12px;background:#0a1727}
+.av{display:grid;place-items:center;flex:0 0 40px;height:40px;border:1px solid #28665c;border-radius:12px;color:var(--green);background:#102b2b;font-weight:900}
+.pi{flex:1;min-width:0}.pn{font-weight:800;font-size:14px;overflow-wrap:anywhere}.ps{color:var(--muted);font-size:11px;margin-top:2px}
+.tag{padding:5px 7px;border-radius:7px;color:#b6ffda;background:#153b30;font-size:10px;font-weight:900}
+.wait{padding:12px;margin-top:14px;border:1px dashed #2a4963;border-radius:11px;color:#a9c4db;text-align:center;font-size:13px}
+.gap{display:grid;gap:10px}
+.debug{margin-top:auto;padding-top:22px;color:#70859c;font-family:ui-monospace,Menlo,monospace;font-size:10px;line-height:1.8;overflow-wrap:anywhere}
+.note{text-align:center;font-size:12px}
+</style>
 </head>
 <body>
-  <main class="app">
-    <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true">⌁</div>
-        <div>CIRCUIT <span style="color:var(--green)">CLASH</span></div>
-      </div>
-      <div class="connection" aria-live="polite">
-        <span id="connectionDot" class="dot"></span>
-        <span id="connectionText">CONNECTING</span>
-      </div>
-    </header>
+<main class="app">
+<header>
+  <div class="brand">CIRCUIT <span>CLASH</span></div>
+  <div class="conn"><span id="dot" class="dot"></span><span id="ctext">CONNECTING</span></div>
+</header>
+<div id="notice" role="alert"></div>
 
-    <div id="notice" class="notice" role="alert"></div>
-
-    <section id="homeScreen">
-      <div class="hero">
-        <div class="eyebrow">MULTIPLAYER • STAGE 01</div>
-        <h1>Think fast.<br /><span>Connect.</span> Clash.</h1>
-        <p>Challenge your friends in an electronics quiz duel. Create a room, share the code, and get your team together.</p>
-      </div>
-
-      <section class="card">
-        <div class="card-title">
-          <h2>Player setup</h2>
-          <span style="color:var(--green)">01 / 03</span>
-        </div>
-        <div class="field">
-          <label for="playerName">YOUR PLAYER NAME</label>
-          <input id="playerName" maxlength="20" autocomplete="nickname"
-                 placeholder="e.g. CircuitMaster" />
-        </div>
-        <button id="createBtn" class="btn btn-primary">＋ Create room</button>
-
-        <div class="separator">OR JOIN YOUR FRIENDS</div>
-
-        <div class="field">
-          <label for="roomInput">FOUR-LETTER ROOM CODE</label>
-          <div class="join-row">
-            <input id="roomInput" class="room-input" maxlength="4"
-                   autocomplete="off" autocapitalize="characters"
-                   placeholder="ABCD" />
-            <button id="joinBtn" class="btn btn-blue">Join room</button>
-          </div>
-        </div>
-      </section>
-      <p class="footnote">No account needed · Up to 6 players · Works on phones</p>
-    </section>
-
-    <section id="lobbyScreen" class="hidden">
-      <section class="card room-heading">
-        <div class="eyebrow">YOUR ROOM IS READY</div>
-        <h2>Lobby</h2>
-        <div id="roomCodeDisplay" class="room-code">----</div>
-        <p class="room-subtitle">Share the code to invite your friends.</p>
-        <div class="action-grid">
-          <button id="copyBtn" class="btn btn-secondary">▣ Copy invite link</button>
-          <button id="shareBtn" class="btn btn-secondary">↗ Share room</button>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="players-top">
-          <h2>Players</h2>
-          <span id="playerCount" class="count">0 / 6</span>
-        </div>
-        <div id="playerList" class="player-list"></div>
-        <div id="waitingText" class="waiting">Waiting for players to connect…</div>
-      </section>
-
-      <section class="card">
-        <div class="lobby-actions">
-          <button id="startBtn" class="btn btn-primary hidden" disabled>Start game →</button>
-          <p id="startHint" class="footnote">The host can start when at least 2 players have joined.</p>
-          <button id="leaveBtn" class="btn btn-danger">Leave room</button>
-        </div>
-      </section>
-    </section>
-
-    <section id="placeholderScreen" class="hidden">
-      <section class="card placeholder">
-        <div class="eyebrow">STAGE 02 COMING NEXT</div>
-        <div class="placeholder-icon">⚡</div>
-        <h1 style="font-size:34px">Game starts <span>here.</span></h1>
-        <p>The room has started successfully. The quiz and questions will be added in the next stage.</p>
-        <p id="playingRoomText"></p>
-        <button id="playingLeaveBtn" class="btn btn-danger">Leave room</button>
-      </section>
-    </section>
-
-    <section id="hostLeftScreen" class="hidden">
-      <section class="card placeholder">
-        <div class="placeholder-icon" style="color:var(--red)">⌁</div>
-        <h2>Host left</h2>
-        <p>The host has left this room, so the room has been closed. Create a new room to play again.</p>
-        <button id="homeBtn" class="btn btn-primary">Back to home</button>
-      </section>
-    </section>
-
-    <div class="debug">
-      <strong>SYNC DEBUG</strong><br />
-      Player ID: <span id="debugPlayer">—</span><br />
-      Room: <span id="debugRoom">—</span><br />
-      Phase: <span id="debugPhase">—</span>
+<section id="home">
+  <h1>Think fast.<br><span>Connect.</span> Clash.</h1>
+  <p>An electronics quiz duel for friends. Create a room and share the code, or join a friend's room.</p>
+  <section class="card">
+    <div class="field">
+      <label for="name">Your player name</label>
+      <input id="name" maxlength="20" autocomplete="off" placeholder="e.g. CircuitMaster">
     </div>
-    <footer>CIRCUIT CLASH · REAL-TIME ROOM SYNC</footer>
-  </main>
+    <button id="createBtn" class="btn p">＋ Create room</button>
+    <div class="sep">OR JOIN A ROOM</div>
+    <div class="field">
+      <label for="roomIn">4-character room code</label>
+      <input id="roomIn" class="room-input" maxlength="4" autocomplete="off" autocapitalize="characters" placeholder="ABCD">
+    </div>
+    <button id="joinBtn" class="btn b">Join room</button>
+    <p id="joinStatus" class="note"></p>
+  </section>
+  <p class="note">No account needed · Up to 6 players · Works on phones</p>
+</section>
 
-  <script type="module">
-    import { initializeApp } from
-      "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
-    import {
-      getDatabase, ref, get, set, update, remove, onValue,
-      onDisconnect, runTransaction
-    } from
-      "https://www.gstatic.com/firebasejs/13.1.0/firebase-database.js";
+<section id="lobby" class="hidden">
+  <section class="card center">
+    <div style="color:var(--green);font-size:12px;font-weight:900;letter-spacing:2px">YOUR ROOM CODE</div>
+    <div id="codeShow" class="code">----</div>
+    <p>Share the code with your friends.</p>
+    <div class="grid">
+      <button id="copyBtn" class="btn s">Copy invite link</button>
+      <button id="shareBtn" class="btn s">Share room</button>
+    </div>
+  </section>
+  <section class="card">
+    <div class="top"><h2>Players</h2><span id="count" class="count">0 / 6</span></div>
+    <div id="plist" class="list"></div>
+    <div id="waitTxt" class="wait"></div>
+  </section>
+  <section class="card"><div class="gap">
+    <button id="startBtn" class="btn p hidden">Start game</button>
+    <p id="hint" class="note"></p>
+    <button id="leaveBtn" class="btn d">Leave room</button>
+  </div></section>
+</section>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDJHWQV-TwQO3Xi5U96SZqdnFCwRr2dM3A",
-      authDomain: "circuit-clash-9d903.firebaseapp.com",
-      databaseURL: "https://circuit-clash-9d903-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "circuit-clash-9d903",
-      storageBucket: "circuit-clash-9d903.firebasestorage.app",
-      messagingSenderId: "242249477222",
-      appId: "1:242249477222:web:9b3cd3a3a2d43e35ff11a7"
-    };
+<section id="playing" class="hidden">
+  <section class="card center">
+    <h1>Game starts <span>here.</span></h1>
+    <p>The room has started. Questions come in the next stage.</p>
+    <p id="playTxt"></p>
+    <button id="leave2" class="btn d">Leave room</button>
+  </section>
+</section>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+<section id="closed" class="hidden">
+  <section class="card center">
+    <h2 style="color:var(--red)">Room closed</h2>
+    <p>The host left, so this room was closed. Create a new room to play again.</p>
+    <button id="homeBtn" class="btn p">Back to home</button>
+  </section>
+</section>
 
-    const $ = id => document.getElementById(id);
-    const screens = {
-      home: $("homeScreen"),
-      lobby: $("lobbyScreen"),
-      playing: $("placeholderScreen"),
-      hostLeft: $("hostLeftScreen")
-    };
+<div class="debug"><b>SYNC DEBUG</b><br>
+Player: <span id="dPlayer">-</span><br>Room: <span id="dRoom">-</span><br>
+Phase: <span id="dPhase">-</span><br>Last: <span id="dLast">ready</span></div>
+</main>
 
-    const MAX_PLAYERS = 6;
-    const CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+import { getDatabase, ref, get, set, update, remove, onValue, onDisconnect, runTransaction }
+  from "https://www.gstatic.com/firebasejs/13.1.0/firebase-database.js";
 
-    // This is a browser-session identity, not an authenticated identity.
-    // It is regenerated for each page load.
-    const playerId = makeId();
-    let roomCode = null;
-    let roomPhase = "—";
-    let hostId = null;
-    let myName = "";
-    let isHost = false;
-    let intentionalLeave = false;
-    let closedByHost = false;
-    let roomListener = null;
-    let roomListenerRef = null;
-    let connectionListener = null;
-    let currentPlayers = {};
-    let joiningOrCreating = false;
-    let pendingUrlRoom = new URLSearchParams(location.search).get("room");
+const firebaseConfig = {
+  apiKey: "AIzaSyDJHWQV-TwOQ3Xi5U96SZqdnFCwRr2dM3A",
+  authDomain: "circuit-clash-9d903.firebaseapp.com",
+  databaseURL: "https://circuit-clash-9d903-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "circuit-clash-9d903",
+  storageBucket: "circuit-clash-9d903.firebasestorage.app",
+  messagingSenderId: "242249477222",
+  appId: "1:242249477222:web:9b3cd3a3a2d43e35ff11a7"
+};
+const db = getDatabase(initializeApp(firebaseConfig));
+const $ = id => document.getElementById(id);
+const MAX = 6, CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const screens = { home: $("home"), lobby: $("lobby"), playing: $("playing"), closed: $("closed") };
 
-    $("debugPlayer").textContent = playerId;
+const playerId = Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+let roomCode = null, isHost = false, myName = "", players = {}, phase = "-", hostId = null;
+let stopListen = null, leaving = false, busy = false, rejoining = false, noticeTimer = null;
 
-    function makeId() {
-      if (crypto.randomUUID) return crypto.randomUUID().replaceAll("-", "");
-      const bytes = new Uint8Array(16);
-      crypto.getRandomValues(bytes);
-      return [...bytes].map(n => n.toString(16).padStart(2, "0")).join("");
-    }
+$("dPlayer").textContent = playerId;
+function dbg(t) { $("dLast").textContent = t; }
 
-    function showNotice(message, success = false) {
-      const el = $("notice");
-      el.textContent = message;
-      el.classList.toggle("success", success);
-      el.classList.add("show");
-    }
+function notice(msg, ok) {
+  const n = $("notice");
+  n.textContent = msg;
+  n.className = "show" + (ok ? " ok" : "");
+  clearTimeout(noticeTimer);
+  noticeTimer = setTimeout(function () { n.className = ""; }, ok ? 4000 : 9000);
+  dbg(msg);
+}
+$("notice").addEventListener("click", function () { $("notice").className = ""; });
 
-    function clearNotice() {
-      $("notice").textContent = "";
-      $("notice").classList.remove("show", "success");
-    }
+function show(name) {
+  for (const k in screens) screens[k].classList.toggle("hidden", k !== name);
+  window.scrollTo(0, 0);
+}
+function setBusy(b) {
+  busy = b;
+  $("createBtn").disabled = b; $("joinBtn").disabled = b;
+  $("createBtn").textContent = b ? "Please wait..." : "＋ Create room";
+  $("joinBtn").textContent = b ? "Joining..." : "Join room";
+  $("joinStatus").textContent = b ? "Working..." : "";
+}
+function getName() {
+  const n = $("name").value.trim().replace(/\s+/g, " ");
+  if (!n) throw new Error("Enter your player name first.");
+  return n;
+}
+function genCode() {
+  let c = "";
+  for (let i = 0; i < 4; i++) c += CHARS[Math.floor(Math.random() * CHARS.length)];
+  return c;
+}
+function uniqueName(name, pl) {
+  const used = {};
+  Object.keys(pl || {}).forEach(function (k) { used[String(pl[k].name).toLowerCase()] = 1; });
+  if (!used[name.toLowerCase()]) return name;
+  let i = 2;
+  while (used[(name + " " + i).toLowerCase()]) i++;
+  return name.slice(0, 17) + " " + i;
+}
+function inviteUrl(c) {
+  const u = new URL(location.href);
+  u.search = ""; u.hash = ""; u.searchParams.set("room", c);
+  return u.toString();
+}
 
-    function showScreen(name) {
-      for (const [key, el] of Object.entries(screens)) {
-        el.classList.toggle("hidden", key !== name);
+// Connection state. On every (re)connect, re-arm the disconnect handlers.
+onValue(ref(db, ".info/connected"), function (s) {
+  const on = s.val() === true;
+  $("dot").className = "dot " + (on ? "on" : "off");
+  $("ctext").textContent = on ? "CONNECTED" : "OFFLINE";
+  if (on && roomCode && !leaving) armPresence().catch(function () {});
+}, function () { $("dot").className = "dot off"; $("ctext").textContent = "OFFLINE"; });
+
+async function armPresence() {
+  if (!roomCode) return;
+  if (isHost) {
+    // Host dropping (screen lock, app switch) must NOT delete the room.
+    await onDisconnect(ref(db, "rooms/" + roomCode + "/hostOnline")).set(false);
+    await set(ref(db, "rooms/" + roomCode + "/hostOnline"), true);
+  } else {
+    await onDisconnect(ref(db, "rooms/" + roomCode + "/players/" + playerId)).remove();
+  }
+}
+
+function listen(code) {
+  if (stopListen) stopListen();
+  stopListen = onValue(ref(db, "rooms/" + code), function (snap) {
+    if (roomCode !== code) return;
+    if (!snap.exists()) { if (!leaving) roomClosed(); return; }
+    const r = snap.val();
+    phase = r.phase || "lobby";
+    hostId = r.hostId;
+    isHost = hostId === playerId;
+    players = r.players || {};
+    $("dRoom").textContent = code;
+    $("dPhase").textContent = phase;
+
+    if (!players[playerId] && !isHost && !leaving) {
+      // Our record was removed by a brief disconnect: put it back.
+      if (phase === "lobby" && !rejoining) {
+        rejoining = true;
+        set(ref(db, "rooms/" + code + "/players/" + playerId), { name: myName, joinedAt: Date.now() })
+          .then(armPresence).catch(function (e) { notice("Rejoin failed: " + e.message); })
+          .then(function () { rejoining = false; });
       }
+      return;
     }
-
-    function setBusy(busy) {
-      joiningOrCreating = busy;
-      $("createBtn").disabled = busy;
-      $("joinBtn").disabled = busy;
-      $("createBtn").textContent = busy ? "Please wait…" : "＋ Create room";
-      $("joinBtn").textContent = busy ? "Please wait…" : "Join room";
+    if (!isHost && r.hostOnline === false) notice("Host connection lost. Waiting for the host to return...");
+    if (phase !== "lobby") {
+      $("playTxt").textContent = "Room " + code + " - phase: " + phase;
+      show("playing");
+      return;
     }
+    renderLobby();
+    show("lobby");
+  }, function (e) { notice("Room sync failed: " + e.message); });
+}
 
-    function setConnection(connected) {
-      $("connectionDot").className = "dot " + (connected ? "online" : "offline");
-      $("connectionText").textContent = connected ? "CONNECTED" : "OFFLINE";
+function renderLobby() {
+  const ids = Object.keys(players).sort(function (a, b) { return (players[a].joinedAt || 0) - (players[b].joinedAt || 0); });
+  $("codeShow").textContent = roomCode;
+  $("count").textContent = ids.length + " / " + MAX;
+  const list = $("plist");
+  list.replaceChildren();
+  ids.forEach(function (id) {
+    const p = players[id];
+    const row = document.createElement("div"); row.className = "player";
+    const av = document.createElement("div"); av.className = "av";
+    av.textContent = String(p.name || "?").charAt(0).toUpperCase();
+    const info = document.createElement("div"); info.className = "pi";
+    const nm = document.createElement("div"); nm.className = "pn"; nm.textContent = p.name || "Player";
+    const st = document.createElement("div"); st.className = "ps"; st.textContent = id === playerId ? "You" : "In lobby";
+    info.append(nm, st); row.append(av, info);
+    if (id === hostId) { const t = document.createElement("span"); t.className = "tag"; t.textContent = "HOST"; row.append(t); }
+    list.append(row);
+  });
+  $("waitTxt").textContent = ids.length < 2 ? "Waiting for at least one more player..." : "Everyone ready? The host can start.";
+  $("startBtn").classList.toggle("hidden", !isHost);
+  $("startBtn").disabled = ids.length < 2;
+  $("hint").textContent = isHost ? (ids.length < 2 ? "You need at least 2 players to start." : "All set. Start when ready.") : "Waiting for the host to start.";
+}
+
+async function createRoom() {
+  if (busy) return;
+  setBusy(true);
+  try {
+    myName = getName();
+    let code = null;
+    for (let i = 0; i < 20 && !code; i++) {
+      const c = genCode();
+      const exists = (await get(ref(db, "rooms/" + c))).exists();
+      if (!exists) code = c;
     }
-
-    connectionListener = onValue(ref(db, ".info/connected"), snapshot => {
-      setConnection(snapshot.val() === true);
-    }, () => setConnection(false));
-
-    function updateDebug() {
-      $("debugPlayer").textContent = playerId;
-      $("debugRoom").textContent = roomCode || "—";
-      $("debugPhase").textContent = roomPhase;
-    }
-
-    function validateName() {
-      const name = $("playerName").value.trim().replace(/\s+/g, " ");
-      if (!name) throw new Error("Enter your player name first.");
-      if (name.length > 20) throw new Error("Your name must be 20 characters or fewer.");
-      return name;
-    }
-
-    function normalizeCode(code) {
-      return String(code || "").trim().toUpperCase();
-    }
-
-    function generateCode() {
-      let code = "";
-      for (let i = 0; i < 4; i++) {
-        code += CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)];
-      }
-      return code;
-    }
-
-    function uniqueName(requested, players) {
-      const names = new Set(
-        Object.values(players || {}).map(p => String(p.name || "").toLowerCase())
-      );
-      if (!names.has(requested.toLowerCase())) return requested;
-
-      let number = 2;
-      while (names.has(`${requested} ${number}`.toLowerCase())) number++;
-      const suffix = ` ${number}`;
-      return requested.slice(0, 20 - suffix.length) + suffix;
-    }
-
-    function inviteUrl(code) {
-      const url = new URL(location.href);
-      url.search = "";
-      url.hash = "";
-      url.searchParams.set("room", code);
-      return url.toString();
-    }
-
-    function stopRoomListener() {
-      if (roomListener && roomListenerRef) {
-        roomListener();
-      }
-      roomListener = null;
-      roomListenerRef = null;
-    }
-
-    function listenToRoom(code) {
-      stopRoomListener();
-      const rRef = ref(db, `rooms/${code}`);
-      roomListenerRef = rRef;
-      roomListener = onValue(rRef, snapshot => {
-        if (roomCode !== code) return;
-
-        if (!snapshot.exists()) {
-          if (closedByHost || intentionalLeave) return;
-          handleRoomClosed();
-          return;
-        }
-
-        const room = snapshot.val();
-        roomPhase = room.phase || "lobby";
-        hostId = room.hostId || null;
-        isHost = hostId === playerId;
-        currentPlayers = room.players || {};
-        updateDebug();
-
-        if (!currentPlayers[playerId] && !intentionalLeave) {
-          // The host can remove the room before a guest's onDisconnect fires.
-          handleRoomClosed();
-          return;
-        }
-
-        if (roomPhase !== "lobby") {
-          $("playingRoomText").textContent = `Room ${code} · Phase: ${roomPhase}`;
-          showScreen("playing");
-          return;
-        }
-
-        renderLobby();
-        showScreen("lobby");
-      }, error => {
-        showNotice("Room sync failed: " + error.message);
-      });
-    }
-
-    function renderLobby() {
-      const entries = Object.entries(currentPlayers)
-        .sort((a, b) => (a[1].joinedAt || 0) - (b[1].joinedAt || 0));
-
-      $("roomCodeDisplay").textContent = roomCode;
-      $("playerCount").textContent = `${entries.length} / ${MAX_PLAYERS}`;
-      $("playerList").replaceChildren();
-
-      for (const [id, player] of entries) {
-        const row = document.createElement("div");
-        row.className = "player";
-
-        const avatar = document.createElement("div");
-        avatar.className = "avatar";
-        avatar.textContent = (player.name || "?").trim().charAt(0).toUpperCase();
-
-        const info = document.createElement("div");
-        info.className = "player-info";
-
-        const name = document.createElement("div");
-        name.className = "player-name";
-        name.textContent = player.name || "Player";
-
-        const status = document.createElement("div");
-        status.className = "player-status";
-        status.textContent = id === playerId ? "You" : "Connected to lobby";
-
-        info.append(name, status);
-        row.append(avatar, info);
-
-        if (id === hostId) {
-          const tag = document.createElement("span");
-          tag.className = "host-tag";
-          tag.textContent = "HOST";
-          row.append(tag);
-        }
-
-        $("playerList").append(row);
-      }
-
-      $("waitingText").textContent = entries.length < 2
-        ? "Waiting for at least one more player to join…"
-        : "Everyone ready? The host can start the game.";
-
-      $("startBtn").classList.toggle("hidden", !isHost);
-      $("startBtn").disabled = !isHost || entries.length < 2 || entries.length > MAX_PLAYERS;
-      $("startHint").textContent = isHost
-        ? (entries.length >= 2 ? "All set. Start when your players are ready." :
-          "You need at least 2 players to start.")
-        : "Waiting for the host to start the game.";
-    }
-
-    async function createRoom() {
-      if (joiningOrCreating) return;
-      clearNotice();
-      setBusy(true);
-
-      try {
-        myName = validateName();
-
-        let created = false;
-        let lastError = null;
-
-        // Retry collisions. runTransaction prevents two clients from
-        // successfully creating the same room code at the same time.
-        for (let attempt = 0; attempt < 20 && !created; attempt++) {
-          const code = generateCode();
-          const roomRef = ref(db, `rooms/${code}`);
-          const result = await runTransaction(roomRef, current => {
-            if (current !== null) return; // abort if the room exists
-            return {
-              phase: "lobby",
-              hostId: playerId,
-              createdAt: Date.now(),
-              players: {
-                [playerId]: { name: myName, joinedAt: Date.now() }
-              }
-            };
-          }, { applyLocally: false });
-
-          if (result.committed) {
-            roomCode = code;
-            created = true;
-          }
-        }
-
-        if (!created) throw new Error("Couldn't find an unused room code. Please try again.");
-
-        hostId = playerId;
-        isHost = true;
-        roomPhase = "lobby";
-        currentPlayers = {
-          [playerId]: { name: myName, joinedAt: Date.now() }
-        };
-
-        // Register after the room is committed. If registration fails, roll
-        // back the room so it doesn't become an abandoned empty room.
-        try {
-          await onDisconnect(ref(db, `rooms/${roomCode}`)).remove();
-        } catch (e) {
-          await remove(ref(db, `rooms/${roomCode}`)).catch(() => {});
-          throw e;
-        }
-
-        updateDebug();
-        listenToRoom(roomCode);
-        setRoomUrl(roomCode);
-        showScreen("lobby");
-      } catch (error) {
-        showNotice(error.message || "Couldn't create the room.");
-      } finally {
-        setBusy(false);
-      }
-    }
-
-    async function joinRoom(codeFromInput) {
-      if (joiningOrCreating) return;
-      clearNotice();
-      setBusy(true);
-
-      try {
-        myName = validateName();
-        const code = normalizeCode(codeFromInput);
-
-        if (!/^[A-HJ-NP-Z2-9]{4}$/.test(code)) {
-          throw new Error("Enter a valid 4-character room code.");
-        }
-
-        const roomRef = ref(db, `rooms/${code}`);
-        const snapshot = await get(roomRef);
-
-        if (!snapshot.exists()) throw new Error("Room not found. Check the code and try again.");
-
-        let room = snapshot.val();
-
-        if ((room.phase || "lobby") !== "lobby") {
-          throw new Error("Game already started. You can only join a lobby.");
-        }
-
-        const players = room.players || {};
-        if (Object.keys(players).length >= MAX_PLAYERS) {
-          throw new Error("Room full. This room already has 6 players.");
-        }
-
-        // Reserve a player slot atomically to prevent two people from
-        // both passing the room-capacity check simultaneously.
-        const joinResult = await runTransaction(roomRef, current => {
-          if (!current) return;
-          if ((current.phase || "lobby") !== "lobby") return;
-
-          const currentPlayers = current.players || {};
-          if (currentPlayers[playerId]) return current;
-
-          if (Object.keys(currentPlayers).length >= MAX_PLAYERS) return;
-
-          const chosenName = uniqueName(myName, currentPlayers);
-          return {
-            ...current,
-            players: {
-              ...currentPlayers,
-              [playerId]: { name: chosenName, joinedAt: Date.now() }
-            }
-          };
-        }, { applyLocally: false });
-
-        if (!joinResult.committed) {
-          const latest = joinResult.snapshot.val();
-          if (!latest) throw new Error("Room not found. It may have been closed.");
-          if ((latest.phase || "lobby") !== "lobby") {
-            throw new Error("Game already started. You can only join a lobby.");
-          }
-          if (Object.keys(latest.players || {}).length >= MAX_PLAYERS) {
-            throw new Error("Room full. This room already has 6 players.");
-          }
-          throw new Error("Couldn't join the room. Please try again.");
-        }
-
-        room = joinResult.snapshot.val();
-        roomCode = code;
-        hostId = room.hostId;
-        isHost = hostId === playerId;
-        roomPhase = room.phase || "lobby";
-        currentPlayers = room.players || {};
-        myName = currentPlayers[playerId].name;
-
-        try {
-          // Guests remove only their own player record on disconnect.
-          await onDisconnect(ref(db, `rooms/${roomCode}/players/${playerId}`)).remove();
-        } catch (e) {
-          await remove(ref(db, `rooms/${roomCode}/players/${playerId}`)).catch(() => {});
-          roomCode = null;
-          throw e;
-        }
-
-        updateDebug();
-        listenToRoom(roomCode);
-        setRoomUrl(roomCode);
-        showScreen("lobby");
-
-        if (myName !== validateName()) {
-          showNotice(`That name was taken, so your name is now "${myName}".`, true);
-        }
-      } catch (error) {
-        showNotice(error.message || "Couldn't join the room.");
-      } finally {
-        setBusy(false);
-      }
-    }
-
-    function setRoomUrl(code) {
-      const url = new URL(location.href);
-      url.searchParams.set("room", code);
-      history.replaceState({}, "", url);
-    }
-
-    function clearRoomUrl() {
-      const url = new URL(location.href);
-      url.searchParams.delete("room");
-      history.replaceState({}, "", url.pathname + url.search + url.hash);
-    }
-
-    function handleRoomClosed() {
-      stopRoomListener();
-      roomCode = null;
-      roomPhase = "—";
-      hostId = null;
-      isHost = false;
-      currentPlayers = {};
-      closedByHost = true;
-      updateDebug();
-      clearRoomUrl();
-      showScreen("hostLeft");
-    }
-
-    async function leaveRoom() {
-      if (!roomCode) {
-        showScreen("home");
-        return;
-      }
-
-      clearNotice();
-      intentionalLeave = true;
-      const code = roomCode;
-      const wasHost = isHost;
-
-      stopRoomListener();
-
-      try {
-        if (wasHost) {
-          // Guests observe the missing room and show "Host left".
-          await remove(ref(db, `rooms/${code}`));
-        } else {
-          await remove(ref(db, `rooms/${code}/players/${playerId}`));
-        }
-      } catch (error) {
-        showNotice("Couldn't leave cleanly: " + error.message);
-        intentionalLeave = false;
-        listenToRoom(code);
-        return;
-      }
-
-      roomCode = null;
-      roomPhase = "—";
-      hostId = null;
-      isHost = false;
-      currentPlayers = {};
-      updateDebug();
-      clearRoomUrl();
-      intentionalLeave = false;
-      closedByHost = false;
-      showScreen("home");
-    }
-
-    async function startGame() {
-      if (!roomCode || !isHost || currentPlayers &&
-          Object.keys(currentPlayers).length < 2) return;
-
-      clearNotice();
-      $("startBtn").disabled = true;
-
-      try {
-        // Transaction verifies the room is still a lobby and this player
-        // remains the host before changing the phase.
-        const result = await runTransaction(ref(db, `rooms/${roomCode}`), room => {
-          if (!room || room.phase !== "lobby" || room.hostId !== playerId) return;
-          if (Object.keys(room.players || {}).length < 2) return;
-          return { ...room, phase: "playing" };
-        }, { applyLocally: false });
-
-        if (!result.committed) {
-          showNotice("Couldn't start: the room changed or fewer than 2 players remain.");
-          return;
-        }
-        // onValue moves all clients to the placeholder screen.
-      } catch (error) {
-        showNotice("Couldn't start the game: " + error.message);
-      } finally {
-        if (roomCode) $("startBtn").disabled = !isHost ||
-          Object.keys(currentPlayers || {}).length < 2;
-      }
-    }
-
-    async function copyInvite() {
-      if (!roomCode) return;
-      const link = inviteUrl(roomCode);
-      try {
-        await navigator.clipboard.writeText(link);
-        showNotice("Invite link copied! Send it to your friends.", true);
-      } catch {
-        // Clipboard API may be unavailable outside a secure context.
-        window.prompt("Copy this invite link:", link);
-      }
-    }
-
-    async function shareInvite() {
-      if (!roomCode) return;
-      const link = inviteUrl(roomCode);
-      const data = {
-        title: "Join my Circuit Clash room",
-        text: `Join my Circuit Clash quiz room! Code: ${roomCode}`,
-        url: link
-      };
-
-      if (navigator.share) {
-        try {
-          await navigator.share(data);
-        } catch (error) {
-          if (error.name !== "AbortError") {
-            showNotice("Couldn't open sharing: " + error.message);
-          }
-        }
-      } else {
-        await copyInvite();
-      }
-    }
-
-    $("createBtn").addEventListener("click", createRoom);
-    $("joinBtn").addEventListener("click", () => joinRoom($("roomInput").value));
-    $("startBtn").addEventListener("click", startGame);
-    $("leaveBtn").addEventListener("click", leaveRoom);
-    $("playingLeaveBtn").addEventListener("click", leaveRoom);
-
-    $("homeBtn").addEventListener("click", () => {
-      clearNotice();
-      closedByHost = false;
-      showScreen("home");
+    if (!code) throw new Error("Could not find a free room code. Try again.");
+    await set(ref(db, "rooms/" + code), {
+      phase: "lobby", hostId: playerId, hostOnline: true, createdAt: Date.now(),
+      players: (function () { const o = {}; o[playerId] = { name: myName, joinedAt: Date.now() }; return o; })()
     });
+    roomCode = code; isHost = true; leaving = false;
+    await armPresence();
+    history.replaceState({}, "", inviteUrl(code));
+    listen(code);
+    dbg("Room " + code + " created");
+  } catch (e) {
+    roomCode = null;
+    notice(e.message || "Could not create the room.");
+  }
+  setBusy(false);
+}
 
-    $("copyBtn").addEventListener("click", copyInvite);
-    $("shareBtn").addEventListener("click", shareInvite);
+async function joinRoom() {
+  if (busy) return;
+  setBusy(true);
+  try {
+    myName = getName();
+    const code = $("roomIn").value.trim().toUpperCase();
+    if (code.length !== 4) throw new Error("Enter the 4-character room code.");
+    dbg("Looking for room " + code);
+    const snap = await get(ref(db, "rooms/" + code));
+    if (!snap.exists()) throw new Error("Room " + code + " was not found. Check the code, and make sure the host is still on the lobby screen.");
+    const r = snap.val();
+    if ((r.phase || "lobby") !== "lobby") throw new Error("The game has already started (phase: " + r.phase + ").");
+    const pl = r.players || {};
+    if (Object.keys(pl).length >= MAX) throw new Error("This room is full (6 players).");
+    myName = uniqueName(myName, pl);
+    await set(ref(db, "rooms/" + code + "/players/" + playerId), { name: myName, joinedAt: Date.now() });
+    roomCode = code; isHost = false; leaving = false;
+    await armPresence();
+    history.replaceState({}, "", inviteUrl(code));
+    listen(code);
+    notice("Joined room " + code + " as " + myName, true);
+  } catch (e) {
+    roomCode = null;
+    notice(e.message || "Could not join the room.");
+  }
+  setBusy(false);
+}
 
-    $("roomInput").addEventListener("input", event => {
-      event.target.value = event.target.value
-        .toUpperCase().replace(/[^A-HJ-NP-Z2-9]/g, "").slice(0, 4);
-    });
+function roomClosed() {
+  if (stopListen) stopListen();
+  stopListen = null; roomCode = null; players = {}; phase = "-";
+  $("dRoom").textContent = "-"; $("dPhase").textContent = "-";
+  history.replaceState({}, "", location.pathname);
+  show("closed");
+}
 
-    $("roomInput").addEventListener("keydown", event => {
-      if (event.key === "Enter") joinRoom($("roomInput").value);
-    });
+async function leaveRoom() {
+  if (!roomCode) { show("home"); return; }
+  leaving = true;
+  const code = roomCode, host = isHost;
+  if (stopListen) stopListen();
+  stopListen = null;
+  try {
+    if (host) await remove(ref(db, "rooms/" + code));
+    else await remove(ref(db, "rooms/" + code + "/players/" + playerId));
+  } catch (e) { notice("Could not leave cleanly: " + e.message); }
+  roomCode = null; isHost = false; players = {}; phase = "-";
+  $("dRoom").textContent = "-"; $("dPhase").textContent = "-";
+  history.replaceState({}, "", location.pathname);
+  leaving = false;
+  show("home");
+}
 
-    $("playerName").addEventListener("keydown", event => {
-      if (event.key === "Enter") createRoom();
-    });
+async function startGame() {
+  if (!roomCode || !isHost || Object.keys(players).length < 2) return;
+  $("startBtn").disabled = true;
+  try {
+    await update(ref(db, "rooms/" + roomCode), { phase: "playing" });
+  } catch (e) { notice("Could not start: " + e.message); $("startBtn").disabled = false; }
+}
 
-    // Support direct links such as https://your-site.github.io/?room=ABCD.
-    // Do not auto-join until the player enters their name.
-    if (pendingUrlRoom) {
-      $("roomInput").value = normalizeCode(pendingUrlRoom).slice(0, 4);
-      $("playerName").focus();
-    }
+async function copyInvite() {
+  const link = inviteUrl(roomCode);
+  try { await navigator.clipboard.writeText(link); notice("Invite link copied.", true); }
+  catch (e) { window.prompt("Copy this invite link:", link); }
+}
+async function shareInvite() {
+  if (navigator.share) {
+    try { await navigator.share({ title: "Circuit Clash", text: "Join my quiz room. Code: " + roomCode, url: inviteUrl(roomCode) }); }
+    catch (e) { if (e.name !== "AbortError") copyInvite(); }
+  } else copyInvite();
+}
 
-    // Ensure no stale room code is shown in debug when the user returns home.
-    updateDebug();
-  </script>
+$("createBtn").addEventListener("click", createRoom);
+$("joinBtn").addEventListener("click", joinRoom);
+$("startBtn").addEventListener("click", startGame);
+$("leaveBtn").addEventListener("click", leaveRoom);
+$("leave2").addEventListener("click", leaveRoom);
+$("homeBtn").addEventListener("click", function () { show("home"); });
+$("copyBtn").addEventListener("click", copyInvite);
+$("shareBtn").addEventListener("click", shareInvite);
+$("roomIn").addEventListener("input", function (e) {
+  e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 4);
+});
+$("roomIn").addEventListener("keydown", function (e) { if (e.key === "Enter") joinRoom(); });
+
+const urlRoom = new URLSearchParams(location.search).get("room");
+if (urlRoom) { $("roomIn").value = urlRoom.toUpperCase().slice(0, 4); $("name").focus(); }
+</script>
 </body>
 </html>
