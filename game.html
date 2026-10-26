@@ -6,22 +6,21 @@
 <meta name="theme-color" content="#07111f">
 <title>Circuit Clash | Multiplayer Quiz</title>
 <style>
-:root{--bg:#07111f;--green:#55ff9b;--blue:#39c8ff;--text:#eef7ff;--muted:#9aafc7;--red:#ff657a;--border:#243952}
+:root{--green:#55ff9b;--blue:#39c8ff;--text:#eef7ff;--muted:#9aafc7;--red:#ff657a;--border:#243952}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;color:var(--text);background:linear-gradient(#07111f,#081423);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
 button,input{font:inherit}button{cursor:pointer;touch-action:manipulation}button:disabled{opacity:.45}
 .app{width:calc(100% - 28px);max-width:520px;margin:0 auto;padding:20px 0 34px;min-height:100vh;display:flex;flex-direction:column}
-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
 .brand{font-size:18px;font-weight:900;letter-spacing:1.4px}.brand span{color:var(--green)}
 .conn{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px;font-weight:700}
 .dot{width:9px;height:9px;border-radius:50%;background:#8191a5}.dot.on{background:var(--green)}.dot.off{background:var(--red)}
-h1{margin:6px 0 10px;font-size:clamp(32px,9vw,46px);line-height:1.05;letter-spacing:-1.5px}h1 span{color:var(--green)}
+h1{margin:6px 0 10px;font-size:clamp(30px,9vw,44px);line-height:1.05;letter-spacing:-1.5px}h1 span{color:var(--green)}
 h2{margin:0;font-size:20px}p{color:var(--muted);line-height:1.6;margin:8px 0}
 .card{padding:20px;margin-bottom:14px;border:1px solid var(--border);border-radius:18px;background:#101d30}
 label{display:block;margin-bottom:8px;color:#c2d5e9;font-size:12px;font-weight:800}
 input{display:block;width:100%;min-height:52px;padding:13px;border:1px solid #304966;border-radius:11px;outline:none;color:var(--text);background:#071321;font-size:16px}
-input:focus{border-color:var(--blue)}
-.field{margin-bottom:14px}
+input:focus{border-color:var(--blue)}.field{margin-bottom:14px}
 .btn{width:100%;min-height:52px;padding:12px 16px;border:1px solid transparent;border-radius:11px;font-size:15px;font-weight:900}
 .p{color:#062015;background:var(--green)}.b{color:#041925;background:var(--blue)}
 .s{color:var(--text);background:#14253a;border-color:#304760}.d{color:#ffb5c0;background:#321b2a;border-color:#683143}
@@ -29,21 +28,32 @@ input:focus{border-color:var(--blue)}
 .sep{margin:18px 0;color:#70859d;font-size:11px;font-weight:800;text-align:center;letter-spacing:2px}
 #notice{display:none;position:fixed;z-index:50;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));max-width:496px;margin:0 auto;padding:14px 16px;border:1px solid #a44358;border-radius:12px;color:#ffd0d8;background:#3a1626;font-size:14px;line-height:1.5;box-shadow:0 8px 30px #000a}
 #notice.show{display:block}#notice.ok{border-color:#287b57;color:#aaffcd;background:#0f3026}
-.hidden{display:none!important}
-.center{text-align:center}
+.hidden{display:none!important}.center{text-align:center}
 .code{margin:14px 0;color:var(--green);font-size:clamp(42px,14vw,60px);font-weight:950;letter-spacing:10px;text-indent:10px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .count{padding:6px 10px;border:1px solid #28536c;border-radius:20px;color:var(--blue);background:#0d293b;font-size:12px;font-weight:900}
 .list{display:flex;flex-direction:column;gap:9px}
 .player{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #253d55;border-radius:12px;background:#0a1727}
+.player.me{border-color:#2f7a63}
 .av{display:grid;place-items:center;flex:0 0 40px;height:40px;border:1px solid #28665c;border-radius:12px;color:var(--green);background:#102b2b;font-weight:900}
 .pi{flex:1;min-width:0}.pn{font-weight:800;font-size:14px;overflow-wrap:anywhere}.ps{color:var(--muted);font-size:11px;margin-top:2px}
 .tag{padding:5px 7px;border-radius:7px;color:#b6ffda;background:#153b30;font-size:10px;font-weight:900}
+.sc{font-weight:900;font-size:17px;text-align:right}.pt{color:var(--green);font-size:12px;font-weight:900}
 .wait{padding:12px;margin-top:14px;border:1px dashed #2a4963;border-radius:11px;color:#a9c4db;text-align:center;font-size:13px}
-.gap{display:grid;gap:10px}
+.gap{display:grid;gap:10px;margin-bottom:12px}
 .debug{margin-top:auto;padding-top:22px;color:#70859c;font-family:ui-monospace,Menlo,monospace;font-size:10px;line-height:1.8;overflow-wrap:anywhere}
 .note{text-align:center;font-size:12px}
+.bar{height:6px;border-radius:6px;background:#1b3040;overflow:hidden;margin-bottom:12px}
+.bar i{display:block;height:100%;width:100%;background:var(--green);transition:width .25s linear}
+.timer{font-size:34px;font-weight:950;color:var(--green);margin-top:8px}.timer.u{color:var(--red)}
+.tagt{display:inline-block;padding:5px 11px;border:1px solid #28536c;border-radius:20px;color:var(--blue);font-size:11px;font-weight:800}
+.qt{font-size:clamp(19px,5.4vw,25px);line-height:1.35;margin:14px 0 4px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;min-height:62px;padding:12px;border:2px solid #304966;border-radius:13px;color:var(--text);background:#102535;text-align:left;font-size:16px;font-weight:700}
+.opt b{flex:0 0 28px;height:28px;border-radius:8px;display:grid;place-items:center;background:#203849;color:#9bb5c6;font-size:12px}
+.opt:disabled{opacity:.95}.opt.sel{border-color:var(--blue);background:#123a52}
+.opt.ok{border-color:var(--green);background:#123729}.opt.bad{border-color:var(--red);background:#4a202b}
+.rt{font-size:22px;font-weight:900}
 </style>
 </head>
 <body>
@@ -58,20 +68,16 @@ input:focus{border-color:var(--blue)}
   <h1>Think fast.<br><span>Connect.</span> Clash.</h1>
   <p>An electronics quiz duel for friends. Create a room and share the code, or join a friend's room.</p>
   <section class="card">
-    <div class="field">
-      <label for="name">Your player name</label>
-      <input id="name" maxlength="20" autocomplete="off" placeholder="e.g. CircuitMaster">
-    </div>
+    <div class="field"><label for="name">Your player name</label>
+      <input id="name" maxlength="20" autocomplete="off" placeholder="e.g. CircuitMaster"></div>
     <button id="createBtn" class="btn p">＋ Create room</button>
     <div class="sep">OR JOIN A ROOM</div>
-    <div class="field">
-      <label for="roomIn">4-character room code</label>
-      <input id="roomIn" class="room-input" maxlength="4" autocomplete="off" autocapitalize="characters" placeholder="ABCD">
-    </div>
+    <div class="field"><label for="roomIn">4-character room code</label>
+      <input id="roomIn" class="room-input" maxlength="4" autocomplete="off" autocapitalize="characters" placeholder="ABCD"></div>
     <button id="joinBtn" class="btn b">Join room</button>
     <p id="joinStatus" class="note"></p>
   </section>
-  <p class="note">No account needed · Up to 6 players · Works on phones</p>
+  <p class="note">No account needed · 2 to 6 players · 10 rounds · Works on phones</p>
 </section>
 
 <section id="lobby" class="hidden">
@@ -79,36 +85,52 @@ input:focus{border-color:var(--blue)}
     <div style="color:var(--green);font-size:12px;font-weight:900;letter-spacing:2px">YOUR ROOM CODE</div>
     <div id="codeShow" class="code">----</div>
     <p>Share the code with your friends.</p>
-    <div class="grid">
-      <button id="copyBtn" class="btn s">Copy invite link</button>
-      <button id="shareBtn" class="btn s">Share room</button>
-    </div>
+    <div class="grid"><button id="copyBtn" class="btn s">Copy invite link</button><button id="shareBtn" class="btn s">Share room</button></div>
   </section>
   <section class="card">
     <div class="top"><h2>Players</h2><span id="count" class="count">0 / 6</span></div>
-    <div id="plist" class="list"></div>
-    <div id="waitTxt" class="wait"></div>
+    <div id="plist" class="list"></div><div id="waitTxt" class="wait"></div>
   </section>
   <section class="card"><div class="gap">
     <button id="startBtn" class="btn p hidden">Start game</button>
-    <p id="hint" class="note"></p>
-    <button id="leaveBtn" class="btn d">Leave room</button>
+    <p id="hint" class="note"></p><button id="leaveBtn" class="btn d">Leave room</button>
   </div></section>
 </section>
 
-<section id="playing" class="hidden">
+<section id="question" class="hidden">
+  <div class="top"><b id="rLabel">Round 1 / 10</b><span id="ansCount" class="count">0 / 0 answered</span></div>
+  <div class="bar"><i id="bar"></i></div>
   <section class="card center">
-    <h1>Game starts <span>here.</span></h1>
-    <p>The room has started. Questions come in the next stage.</p>
-    <p id="playTxt"></p>
-    <button id="leave2" class="btn d">Leave room</button>
+    <span id="topic" class="tagt"></span>
+    <h2 id="qText" class="qt"></h2>
+    <div id="tNum" class="timer">25</div>
   </section>
+  <div id="opts" class="gap"></div>
+  <p id="qNote" class="note"></p>
+</section>
+
+<section id="reveal" class="hidden">
+  <section class="card center"><div id="resTitle" class="rt"></div><p id="resWhy"></p></section>
+  <div id="revOpts" class="gap"></div>
+  <section class="card"><div class="top"><h2>Leaderboard</h2><span id="revRound" class="count"></span></div><div id="board" class="list"></div></section>
+  <button id="nextBtn" class="btn p hidden">Next question</button>
+  <p id="revNote" class="note"></p>
+</section>
+
+<section id="final" class="hidden">
+  <section class="card center"><div style="font-size:48px">🏆</div><h1 id="winTxt"></h1><p id="winSub"></p></section>
+  <section class="card"><h2 style="margin-bottom:12px">Final scores</h2><div id="fboard" class="list"></div></section>
+  <div class="gap">
+    <button id="againBtn" class="btn p hidden">Play again</button>
+    <p id="fNote" class="note"></p>
+    <button id="leave3" class="btn d">Leave room</button>
+  </div>
 </section>
 
 <section id="closed" class="hidden">
   <section class="card center">
     <h2 style="color:var(--red)">Room closed</h2>
-    <p>The host left, so this room was closed. Create a new room to play again.</p>
+    <p id="closedMsg">The host left, so this room was closed.</p>
     <button id="homeBtn" class="btn p">Back to home</button>
   </section>
 </section>
@@ -120,7 +142,7 @@ Phase: <span id="dPhase">-</span><br>Last: <span id="dLast">ready</span></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
-import { getDatabase, ref, get, set, update, remove, onValue, onDisconnect, runTransaction }
+import { getDatabase, ref, get, set, update, remove, onValue, onDisconnect, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/13.1.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -133,34 +155,89 @@ const firebaseConfig = {
   appId: "1:242249477222:web:9b3cd3a3a2d43e35ff11a7"
 };
 const db = getDatabase(initializeApp(firebaseConfig));
+
+/* ============================================================
+   QUESTION BANK - edit freely.
+   t = topic, q = question, o = 4 options, c = index of the
+   correct option (0-3), w = explanation shown after each round.
+   ============================================================ */
+const QUESTIONS = [
+{t:"Resistor colour code",q:"In a 4-band resistor, what digit does RED represent?",o:["1","2","3","4"],c:1,w:"Black 0, Brown 1, Red 2, Orange 3, Yellow 4."},
+{t:"Resistor colour code",q:"What is the multiplier of the GOLD band?",o:["× 0.1","× 1","× 10","× 100"],c:0,w:"Gold multiplies by 0.1 (and silver by 0.01)."},
+{t:"Resistor colour code",q:"What is Brown–Black–Red–Gold?",o:["100 Ω","1 kΩ","10 kΩ","100 kΩ"],c:1,w:"1 and 0, times 100 = 1000 Ω. Gold means ±5%."},
+{t:"Resistor colour code",q:"Which colour stands for the digit 5?",o:["Blue","Violet","Green","Grey"],c:2,w:"Green 5, Blue 6, Violet 7, Grey 8, White 9."},
+{t:"Resistor colour code",q:"What tolerance does a GOLD band show?",o:["±1%","±2%","±5%","±10%"],c:2,w:"Gold is ±5%; silver is ±10%."},
+{t:"Resistor colour code",q:"What is Red–Red–Brown–Gold?",o:["22 Ω","220 Ω","2.2 kΩ","22 kΩ"],c:1,w:"22 × 10 = 220 Ω."},
+{t:"Resistor colour code",q:"What is Yellow–Violet–Orange?",o:["47 Ω","470 Ω","4.7 kΩ","47 kΩ"],c:3,w:"47 × 1000 = 47 kΩ."},
+{t:"Ohm's law",q:"Which formula is Ohm's law?",o:["P = I / R","V = I × R","I = V × R","R = V × I"],c:1,w:"Voltage equals current times resistance."},
+{t:"Ohm's law",q:"12 V is applied across 6 Ω. What current flows?",o:["0.5 A","6 A","2 A","72 A"],c:2,w:"I = V / R = 12 / 6 = 2 A."},
+{t:"Ohm's law",q:"3 A flows through 4 Ω. What is the voltage?",o:["0.75 V","7 V","16 V","12 V"],c:3,w:"V = I × R = 3 × 4 = 12 V."},
+{t:"Ohm's law",q:"What is the SI unit of resistance?",o:["Ohm","Volt","Ampere","Watt"],c:0,w:"Resistance is measured in ohms (Ω)."},
+{t:"Ohm's law",q:"Two 10 Ω resistors in series give:",o:["5 Ω","10 Ω","20 Ω","100 Ω"],c:2,w:"Series resistances add: 10 + 10 = 20 Ω."},
+{t:"Ohm's law",q:"Two 10 Ω resistors in parallel give:",o:["5 Ω","10 Ω","20 Ω","100 Ω"],c:0,w:"Equal resistors in parallel: half of one value."},
+{t:"Ohm's law",q:"Power when V = 10 V and I = 2 A?",o:["5 W","12 W","20 W","100 W"],c:2,w:"P = V × I = 20 W."},
+{t:"Ohm's law",q:"5 V across 1 kΩ. What current?",o:["50 mA","5 mA","500 mA","5 A"],c:1,w:"I = 5 / 1000 = 0.005 A = 5 mA."},
+{t:"Logic gates",q:"An AND gate outputs 1 when:",o:["Any input is 1","All inputs are 0","All inputs are 1","Inputs differ"],c:2,w:"AND is HIGH only if every input is HIGH."},
+{t:"Logic gates",q:"Output of a NOT gate for input 1?",o:["1","0","Undefined","Floating"],c:1,w:"NOT inverts its input."},
+{t:"Logic gates",q:"Output of a NOR gate for inputs 0 and 0?",o:["0","1","Both","Unknown"],c:1,w:"OR(0,0) = 0, and NOR inverts it to 1."},
+{t:"Logic gates",q:"Which is a universal gate?",o:["XOR","AND","OR","NAND"],c:3,w:"Any logic function can be built from NAND gates alone."},
+{t:"Logic gates",q:"An XOR gate outputs 1 when:",o:["Inputs are identical","Inputs are different","Both are 0","Both are 1"],c:1,w:"XOR is HIGH when the inputs differ."},
+{t:"Logic gates",q:"Which gate is the complement of AND?",o:["NAND","XOR","NOR","XNOR"],c:0,w:"NAND means NOT-AND."},
+{t:"Diodes",q:"Forward voltage drop of a silicon diode?",o:["0.1 V","5 V","0.7 V","12 V"],c:2,w:"About 0.6 to 0.7 V in normal operation."},
+{t:"Diodes",q:"Which diode is used for voltage regulation?",o:["LED","Zener diode","Photodiode","Rectifier"],c:1,w:"A Zener holds a steady voltage in reverse breakdown."},
+{t:"Diodes",q:"What does a rectifier diode do?",o:["Amplifies signals","Stores charge","Measures heat","Passes current mainly one way"],c:3,w:"It conducts when forward biased and blocks in reverse."},
+{t:"Transistors",q:"Terminals of a BJT are:",o:["Gate, drain, source","Emitter, base, collector","Anode, cathode, gate","Input, output, ground"],c:1,w:"A bipolar transistor has emitter, base and collector."},
+{t:"Transistors",q:"Which terminal controls a MOSFET?",o:["Drain","Source","Gate","Body diode"],c:2,w:"The gate voltage controls the channel."},
+{t:"Transistors",q:"In a BJT, which terminal's current controls the collector current?",o:["Base","Emitter only","Case","Heat sink"],c:0,w:"A small base current controls a larger collector current."},
+{t:"Sensors",q:"A thermocouple works on the:",o:["Hall effect","Piezo effect","Seebeck effect","Photoelectric effect"],c:2,w:"Two dissimilar metals give a voltage that depends on temperature difference."},
+{t:"Sensors",q:"Which metal is used in a Pt100 RTD?",o:["Platinum","Copper oxide","Silver","Carbon"],c:0,w:"Pt stands for platinum."},
+{t:"Sensors",q:"A Pt100 has what resistance at 0 °C?",o:["10 Ω","50 Ω","100 Ω","1000 Ω"],c:2,w:"The 100 in Pt100 is its resistance at 0 °C."},
+{t:"Sensors",q:"A strain gauge measures:",o:["Light","Strain (deformation)","Sound","Colour"],c:1,w:"Deformation changes its electrical resistance."},
+{t:"Sensors",q:"Which sensor detects light intensity?",o:["RTD","Thermocouple","LDR","Strain gauge"],c:2,w:"An LDR's resistance falls as light increases."},
+{t:"Sensors",q:"Which device detects magnetic fields?",o:["Pt100","Hall-effect sensor","LDR","Thermocouple"],c:1,w:"A Hall sensor gives a voltage proportional to the field."},
+{t:"Instrumentation",q:"How is an ammeter connected?",o:["In parallel","Across the supply","In series","Disconnected"],c:2,w:"Current must flow through it, so it goes in series."},
+{t:"Instrumentation",q:"How is a voltmeter connected?",o:["In series","In parallel","With the load shorted","Only to ground"],c:1,w:"It measures the potential difference across two points."},
+{t:"Instrumentation",q:"A Wheatstone bridge is used to measure:",o:["Light","Unknown resistance","Frequency","Sound"],c:1,w:"It balances two branches to find an unknown resistor."},
+{t:"Instrumentation",q:"What does ADC stand for?",o:["Analog-to-Digital Converter","Automatic Diode Control","Alternating Drive Circuit","Amplified Data Coil"],c:0,w:"It converts an analog signal into digital numbers."},
+{t:"Instrumentation",q:"The SI unit of capacitance is the:",o:["Henry","Tesla","Weber","Farad"],c:3,w:"Capacitance is in farads; inductance is in henries."},
+{t:"Instrumentation",q:"Which instrument shows voltage against time?",o:["Oscilloscope","Fuse","Potentiometer","Voltmeter"],c:0,w:"An oscilloscope displays signal waveforms."},
+{t:"Instrumentation",q:"A low-pass filter:",o:["Passes only high frequencies","Passes low frequencies, blocks high","Amplifies everything","Converts AC to DC"],c:1,w:"Frequencies below the cutoff pass; higher ones are attenuated."},
+{t:"Instrumentation",q:"An operational amplifier amplifies:",o:["Temperature","Current only","The difference between its two inputs","Resistance"],c:2,w:"Output = gain × (V+ minus V−)."},
+{t:"Instrumentation",q:"Calibration compares an instrument against:",o:["Its own weight","A reference standard","Another faulty meter","Battery colour"],c:1,w:"It links the instrument's readings to a known reference."},
+{t:"Instrumentation",q:"The unit of frequency is the:",o:["Ohm","Volt","Coulomb","Hertz"],c:3,w:"One hertz is one cycle per second."}
+];
+
+const D = 25000, ROUNDS = 10, MAX = 6;
+const CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const $ = id => document.getElementById(id);
-const MAX = 6, CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-const screens = { home: $("home"), lobby: $("lobby"), playing: $("playing"), closed: $("closed") };
+const screens = {home:$("home"),lobby:$("lobby"),question:$("question"),reveal:$("reveal"),final:$("final"),closed:$("closed")};
 
 const playerId = Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 let roomCode = null, isHost = false, myName = "", players = {}, phase = "-", hostId = null;
+let game = null, answers = {}, reveal = null;
 let stopListen = null, leaving = false, busy = false, rejoining = false, noticeTimer = null;
+let offset = 0, tick = null, renderedRound = -1, myAns = {round:-1, c:-1};
+let revealing = false, advancing = false, armedLobby = false;
+let revTimer = null, nextTimer = null, revSched = -1, nextSched = -1;
 
 $("dPlayer").textContent = playerId;
-function dbg(t) { $("dLast").textContent = t; }
+const dbg = t => { $("dLast").textContent = t; };
+const now = () => Date.now() + offset;
+onValue(ref(db, ".info/serverTimeOffset"), s => { offset = s.val() || 0; });
 
 function notice(msg, ok) {
   const n = $("notice");
-  n.textContent = msg;
-  n.className = "show" + (ok ? " ok" : "");
+  n.textContent = msg; n.className = "show" + (ok ? " ok" : "");
   clearTimeout(noticeTimer);
-  noticeTimer = setTimeout(function () { n.className = ""; }, ok ? 4000 : 9000);
+  noticeTimer = setTimeout(() => { n.className = ""; }, ok ? 4000 : 9000);
   dbg(msg);
 }
-$("notice").addEventListener("click", function () { $("notice").className = ""; });
-
+$("notice").addEventListener("click", () => { $("notice").className = ""; });
 function show(name) {
   for (const k in screens) screens[k].classList.toggle("hidden", k !== name);
-  window.scrollTo(0, 0);
 }
 function setBusy(b) {
-  busy = b;
-  $("createBtn").disabled = b; $("joinBtn").disabled = b;
+  busy = b; $("createBtn").disabled = b; $("joinBtn").disabled = b;
   $("createBtn").textContent = b ? "Please wait..." : "＋ Create room";
   $("joinBtn").textContent = b ? "Joining..." : "Join room";
   $("joinStatus").textContent = b ? "Working..." : "";
@@ -171,129 +248,294 @@ function getName() {
   return n;
 }
 function genCode() {
-  let c = "";
-  for (let i = 0; i < 4; i++) c += CHARS[Math.floor(Math.random() * CHARS.length)];
+  let c = ""; for (let i = 0; i < 4; i++) c += CHARS[Math.floor(Math.random() * CHARS.length)];
   return c;
 }
 function uniqueName(name, pl) {
   const used = {};
-  Object.keys(pl || {}).forEach(function (k) { used[String(pl[k].name).toLowerCase()] = 1; });
+  Object.keys(pl || {}).forEach(k => { used[String(pl[k].name).toLowerCase()] = 1; });
   if (!used[name.toLowerCase()]) return name;
-  let i = 2;
-  while (used[(name + " " + i).toLowerCase()]) i++;
+  let i = 2; while (used[(name + " " + i).toLowerCase()]) i++;
   return name.slice(0, 17) + " " + i;
 }
 function inviteUrl(c) {
-  const u = new URL(location.href);
-  u.search = ""; u.hash = ""; u.searchParams.set("room", c);
-  return u.toString();
+  const u = new URL(location.href); u.search = ""; u.hash = ""; u.searchParams.set("room", c); return u.toString();
+}
+function shuffle(a) {
+  a = a.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+}
+function sortedIds() {
+  return Object.keys(players).sort((a, b) => (players[b].score || 0) - (players[a].score || 0) || (players[a].joinedAt || 0) - (players[b].joinedAt || 0));
 }
 
-// Connection state. On every (re)connect, re-arm the disconnect handlers.
-onValue(ref(db, ".info/connected"), function (s) {
+/* ---------- connection and presence ---------- */
+onValue(ref(db, ".info/connected"), s => {
   const on = s.val() === true;
   $("dot").className = "dot " + (on ? "on" : "off");
   $("ctext").textContent = on ? "CONNECTED" : "OFFLINE";
-  if (on && roomCode && !leaving) armPresence().catch(function () {});
-}, function () { $("dot").className = "dot off"; $("ctext").textContent = "OFFLINE"; });
+  if (on && roomCode && !leaving) armPresence().catch(() => {});
+}, () => { $("dot").className = "dot off"; $("ctext").textContent = "OFFLINE"; });
 
 async function armPresence() {
   if (!roomCode) return;
   if (isHost) {
-    // Host dropping (screen lock, app switch) must NOT delete the room.
     await onDisconnect(ref(db, "rooms/" + roomCode + "/hostOnline")).set(false);
     await set(ref(db, "rooms/" + roomCode + "/hostOnline"), true);
-  } else {
+  } else if (phase === "lobby") {
     await onDisconnect(ref(db, "rooms/" + roomCode + "/players/" + playerId)).remove();
+    armedLobby = true;
   }
 }
 
+/* ---------- room listener ---------- */
 function listen(code) {
   if (stopListen) stopListen();
-  stopListen = onValue(ref(db, "rooms/" + code), function (snap) {
+  stopListen = onValue(ref(db, "rooms/" + code), snap => {
     if (roomCode !== code) return;
-    if (!snap.exists()) { if (!leaving) roomClosed(); return; }
+    if (!snap.exists()) { if (!leaving) roomClosed("The host left, so this room was closed."); return; }
     const r = snap.val();
-    phase = r.phase || "lobby";
-    hostId = r.hostId;
-    isHost = hostId === playerId;
-    players = r.players || {};
-    $("dRoom").textContent = code;
-    $("dPhase").textContent = phase;
+    phase = r.phase || "lobby"; hostId = r.hostId; isHost = hostId === playerId;
+    players = r.players || {}; game = r.game || null; answers = r.answers || {}; reveal = r.reveal || null;
+    $("dRoom").textContent = code; $("dPhase").textContent = phase;
 
     if (!players[playerId] && !isHost && !leaving) {
-      // Our record was removed by a brief disconnect: put it back.
-      if (phase === "lobby" && !rejoining) {
-        rejoining = true;
-        set(ref(db, "rooms/" + code + "/players/" + playerId), { name: myName, joinedAt: Date.now() })
-          .then(armPresence).catch(function (e) { notice("Rejoin failed: " + e.message); })
-          .then(function () { rejoining = false; });
-      }
+      if (phase === "lobby") {
+        if (!rejoining) {
+          rejoining = true;
+          set(ref(db, "rooms/" + code + "/players/" + playerId), {name: myName, joinedAt: Date.now(), score: 0, correct: 0})
+            .then(armPresence).catch(e => notice("Rejoin failed: " + e.message))
+            .then(() => { rejoining = false; });
+        }
+      } else roomClosed("You were disconnected from this game.");
       return;
     }
     if (!isHost && r.hostOnline === false) notice("Host connection lost. Waiting for the host to return...");
-    if (phase !== "lobby") {
-      $("playTxt").textContent = "Room " + code + " - phase: " + phase;
-      show("playing");
-      return;
+
+    if (phase !== "lobby" && armedLobby && !isHost) {
+      armedLobby = false;
+      onDisconnect(ref(db, "rooms/" + code + "/players/" + playerId)).cancel().catch(() => {});
     }
-    renderLobby();
-    show("lobby");
-  }, function (e) { notice("Room sync failed: " + e.message); });
+    if (phase === "lobby") {
+      myAns = {round: -1, c: -1}; renderedRound = -1; stopTick();
+      if (!armedLobby && !isHost) armPresence().catch(() => {});
+      renderLobby(); show("lobby");
+    } else if (phase === "question" && game) { renderQuestion(); hostWatch(); }
+    else if (phase === "reveal" && game) { stopTick(); renderReveal(); hostWatch(); }
+    else if (phase === "final") { stopTick(); renderFinal(); }
+    window.scrollTo(0, 0);
+  }, e => notice("Room sync failed: " + e.message));
 }
 
+/* ---------- host game logic ---------- */
+function hostWatch() {
+  if (!isHost || !game) return;
+  if (phase === "question") {
+    const ans = answers[game.round] || {};
+    if (Object.keys(players).every(id => ans[id])) { doReveal(); return; }
+    if (revSched !== game.round) {
+      revSched = game.round; clearTimeout(revTimer);
+      revTimer = setTimeout(doReveal, Math.max(0, (game.startAt || now()) + D - now()) + 500);
+    }
+  } else if (phase === "reveal" && nextSched !== game.round) {
+    nextSched = game.round; clearTimeout(nextTimer);
+    nextTimer = setTimeout(doNext, 9000);
+  }
+}
+async function doReveal() {
+  if (!isHost || !roomCode || revealing) return;
+  revealing = true;
+  try {
+    const s = await get(ref(db, "rooms/" + roomCode));
+    if (!s.exists()) return;
+    const r = s.val();
+    if (r.phase !== "question") return;
+    const g = r.game, q = QUESTIONS[g.order[g.round]];
+    const ans = (r.answers || {})[g.round] || {}, pl = r.players || {};
+    const up = {phase: "reveal"}, pts = {}, ch = {};
+    Object.keys(pl).forEach(id => {
+      const a = ans[id]; let p = 0;
+      if (a) {
+        ch[id] = a.c;
+        const el = (a.t || g.startAt) - g.startAt;
+        if (a.c === q.c && el <= D + 1500) {
+          const e = Math.max(0, Math.min(D, el));
+          p = e <= 5000 ? 100 : Math.round(100 - 80 * (e - 5000) / (D - 5000));
+        }
+      }
+      pts[id] = p;
+      up["players/" + id + "/score"] = (pl[id].score || 0) + p;
+      up["players/" + id + "/correct"] = (pl[id].correct || 0) + (p > 0 ? 1 : 0);
+    });
+    up.reveal = {pts: pts, ch: ch};
+    await update(ref(db, "rooms/" + roomCode), up);
+  } catch (e) { notice("Could not finish the round: " + e.message); }
+  finally { revealing = false; }
+}
+async function doNext() {
+  if (!isHost || !roomCode || advancing) return;
+  advancing = true;
+  try {
+    const s = await get(ref(db, "rooms/" + roomCode));
+    const r = s.val();
+    if (!r || r.phase !== "reveal") return;
+    if (r.game.round >= ROUNDS - 1) await update(ref(db, "rooms/" + roomCode), {phase: "final"});
+    else await update(ref(db, "rooms/" + roomCode), {phase: "question", "game/round": r.game.round + 1, "game/startAt": serverTimestamp(), reveal: null});
+  } catch (e) { notice("Could not continue: " + e.message); }
+  finally { advancing = false; }
+}
+function resetScores() {
+  const up = {};
+  Object.keys(players).forEach(id => { up["players/" + id + "/score"] = 0; up["players/" + id + "/correct"] = 0; });
+  return up;
+}
+async function startGame() {
+  if (!roomCode || !isHost || Object.keys(players).length < 2) return;
+  $("startBtn").disabled = true;
+  try {
+    const up = resetScores();
+    up.phase = "question"; up.reveal = null; up.answers = null;
+    up.game = {order: shuffle(QUESTIONS.map((x, i) => i)).slice(0, ROUNDS), round: 0, startAt: serverTimestamp()};
+    revSched = -1; nextSched = -1;
+    await update(ref(db, "rooms/" + roomCode), up);
+  } catch (e) { notice("Could not start: " + e.message); $("startBtn").disabled = false; }
+}
+async function playAgain() {
+  if (!isHost) return;
+  try {
+    const up = resetScores();
+    up.phase = "lobby"; up.game = null; up.reveal = null; up.answers = null;
+    revSched = -1; nextSched = -1;
+    await update(ref(db, "rooms/" + roomCode), up);
+  } catch (e) { notice("Could not restart: " + e.message); }
+}
+
+/* ---------- screens ---------- */
 function renderLobby() {
-  const ids = Object.keys(players).sort(function (a, b) { return (players[a].joinedAt || 0) - (players[b].joinedAt || 0); });
+  const ids = Object.keys(players).sort((a, b) => (players[a].joinedAt || 0) - (players[b].joinedAt || 0));
   $("codeShow").textContent = roomCode;
   $("count").textContent = ids.length + " / " + MAX;
-  const list = $("plist");
-  list.replaceChildren();
-  ids.forEach(function (id) {
-    const p = players[id];
-    const row = document.createElement("div"); row.className = "player";
-    const av = document.createElement("div"); av.className = "av";
-    av.textContent = String(p.name || "?").charAt(0).toUpperCase();
-    const info = document.createElement("div"); info.className = "pi";
-    const nm = document.createElement("div"); nm.className = "pn"; nm.textContent = p.name || "Player";
-    const st = document.createElement("div"); st.className = "ps"; st.textContent = id === playerId ? "You" : "In lobby";
-    info.append(nm, st); row.append(av, info);
-    if (id === hostId) { const t = document.createElement("span"); t.className = "tag"; t.textContent = "HOST"; row.append(t); }
-    list.append(row);
-  });
+  const list = $("plist"); list.replaceChildren();
+  ids.forEach(id => list.append(row(String(players[id].name || "?").charAt(0).toUpperCase(), players[id].name, id === playerId ? "You" : "In lobby", "", id === hostId, id === playerId)));
   $("waitTxt").textContent = ids.length < 2 ? "Waiting for at least one more player..." : "Everyone ready? The host can start.";
   $("startBtn").classList.toggle("hidden", !isHost);
   $("startBtn").disabled = ids.length < 2;
   $("hint").textContent = isHost ? (ids.length < 2 ? "You need at least 2 players to start." : "All set. Start when ready.") : "Waiting for the host to start.";
 }
+function row(avText, name, sub, right, isHostTag, me, rightSub) {
+  const r = document.createElement("div"); r.className = "player" + (me ? " me" : "");
+  const av = document.createElement("div"); av.className = "av"; av.textContent = avText;
+  const info = document.createElement("div"); info.className = "pi";
+  const nm = document.createElement("div"); nm.className = "pn"; nm.textContent = name || "Player";
+  const st = document.createElement("div"); st.className = "ps"; st.textContent = sub || "";
+  info.append(nm, st); r.append(av, info);
+  if (isHostTag) { const t = document.createElement("span"); t.className = "tag"; t.textContent = "HOST"; r.append(t); }
+  if (right !== "") {
+    const sc = document.createElement("div"); sc.className = "sc"; sc.textContent = right;
+    if (rightSub) { const p = document.createElement("div"); p.className = "pt"; p.textContent = rightSub; sc.append(p); }
+    r.append(sc);
+  }
+  return r;
+}
+function buildOpts(box, q, handler) {
+  box.replaceChildren();
+  q.o.forEach((t, i) => {
+    const b = document.createElement("button"); b.className = "opt";
+    const l = document.createElement("b"); l.textContent = "ABCD"[i];
+    const s = document.createElement("span"); s.textContent = t;
+    b.append(l, s);
+    if (handler) b.addEventListener("click", () => handler(i)); else b.disabled = true;
+    box.append(b);
+  });
+}
+function renderQuestion() {
+  const q = QUESTIONS[game.order[game.round]];
+  if (renderedRound !== game.round) {
+    renderedRound = game.round;
+    $("topic").textContent = q.t; $("qText").textContent = q.q;
+    $("rLabel").textContent = "Round " + (game.round + 1) + " / " + ROUNDS;
+    buildOpts($("opts"), q, pick);
+  }
+  const ans = answers[game.round] || {};
+  const n = Object.keys(players).filter(id => ans[id]).length;
+  $("ansCount").textContent = n + " / " + Object.keys(players).length + " answered";
+  updateQ(); startTick(); show("question");
+}
+function updateQ() {
+  if (phase !== "question" || !game) return;
+  const rem = Math.max(0, (game.startAt || now()) + D - now());
+  $("tNum").textContent = Math.ceil(rem / 1000);
+  $("tNum").className = "timer" + (rem < 5000 ? " u" : "");
+  $("bar").style.width = (rem / D * 100) + "%";
+  const mine = myAns.round === game.round;
+  const locked = mine || rem <= 0;
+  Array.prototype.forEach.call($("opts").children, (b, i) => {
+    b.disabled = locked; b.classList.toggle("sel", mine && myAns.c === i);
+  });
+  $("qNote").textContent = mine ? "Answer locked. Waiting for the others..." : (rem <= 0 ? "Time's up!" : "Tap your answer.");
+}
+function startTick() { if (!tick) tick = setInterval(updateQ, 200); }
+function stopTick() { if (tick) { clearInterval(tick); tick = null; } }
 
+async function pick(i) {
+  if (!game || myAns.round === game.round || now() > (game.startAt || 0) + D) return;
+  myAns = {round: game.round, c: i}; updateQ();
+  try {
+    await set(ref(db, "rooms/" + roomCode + "/answers/" + game.round + "/" + playerId), {c: i, t: serverTimestamp()});
+  } catch (e) { myAns = {round: -1, c: -1}; updateQ(); notice("Answer not sent: " + e.message); }
+}
+function renderReveal() {
+  const q = QUESTIONS[game.order[game.round]];
+  const rv = reveal || {}, pts = rv.pts || {}, ch = rv.ch || {};
+  const mine = ch[playerId], got = pts[playerId] || 0;
+  $("resTitle").textContent = mine === undefined ? "No answer. +0 points" : (mine === q.c ? "Correct! +" + got + " points" : "Wrong. +0 points");
+  $("resTitle").style.color = mine === q.c ? "var(--green)" : "var(--red)";
+  $("resWhy").textContent = "Answer: " + q.o[q.c] + ". " + q.w;
+  buildOpts($("revOpts"), q, null);
+  Array.prototype.forEach.call($("revOpts").children, (b, i) => {
+    if (i === q.c) b.classList.add("ok"); else if (i === mine) b.classList.add("bad");
+  });
+  $("revRound").textContent = "Round " + (game.round + 1) + " / " + ROUNDS;
+  const box = $("board"); box.replaceChildren();
+  sortedIds().forEach((id, k) => box.append(row(String(k + 1), players[id].name, id === playerId ? "You" : "", players[id].score || 0, false, id === playerId, (pts[id] ? "+" + pts[id] : "+0"))));
+  const last = game.round >= ROUNDS - 1;
+  $("nextBtn").classList.toggle("hidden", !isHost);
+  $("nextBtn").textContent = last ? "See final results" : "Next question";
+  $("revNote").textContent = last ? "Final results appear shortly." : "Next question starts automatically.";
+  show("reveal");
+}
+function renderFinal() {
+  const ids = sortedIds();
+  const top = players[ids[0]] ? (players[ids[0]].score || 0) : 0;
+  const winners = ids.filter(id => (players[id].score || 0) === top);
+  $("winTxt").textContent = winners.length > 1 ? "It's a tie!" : players[winners[0]].name + " wins!";
+  $("winSub").textContent = winners.length > 1 ? "Top score: " + top + " points." : top + " points. Great speed and electronics knowledge.";
+  const box = $("fboard"); box.replaceChildren();
+  ids.forEach((id, k) => box.append(row(String(k + 1), players[id].name, (players[id].correct || 0) + " / " + ROUNDS + " correct", players[id].score || 0, false, id === playerId)));
+  $("againBtn").classList.toggle("hidden", !isHost);
+  $("fNote").textContent = isHost ? "" : "Waiting for the host to play again.";
+  show("final");
+}
+
+/* ---------- create / join / leave ---------- */
 async function createRoom() {
   if (busy) return;
   setBusy(true);
   try {
     myName = getName();
     let code = null;
-    for (let i = 0; i < 20 && !code; i++) {
-      const c = genCode();
-      const exists = (await get(ref(db, "rooms/" + c))).exists();
-      if (!exists) code = c;
-    }
+    for (let i = 0; i < 20 && !code; i++) { const c = genCode(); if (!(await get(ref(db, "rooms/" + c))).exists()) code = c; }
     if (!code) throw new Error("Could not find a free room code. Try again.");
-    await set(ref(db, "rooms/" + code), {
-      phase: "lobby", hostId: playerId, hostOnline: true, createdAt: Date.now(),
-      players: (function () { const o = {}; o[playerId] = { name: myName, joinedAt: Date.now() }; return o; })()
-    });
-    roomCode = code; isHost = true; leaving = false;
+    const pl = {}; pl[playerId] = {name: myName, joinedAt: Date.now(), score: 0, correct: 0};
+    await set(ref(db, "rooms/" + code), {phase: "lobby", hostId: playerId, hostOnline: true, createdAt: Date.now(), players: pl});
+    roomCode = code; isHost = true; leaving = false; phase = "lobby";
     await armPresence();
     history.replaceState({}, "", inviteUrl(code));
-    listen(code);
-    dbg("Room " + code + " created");
-  } catch (e) {
-    roomCode = null;
-    notice(e.message || "Could not create the room.");
-  }
+    listen(code); dbg("Room " + code + " created");
+  } catch (e) { roomCode = null; notice(e.message || "Could not create the room."); }
   setBusy(false);
 }
-
 async function joinRoom() {
   if (busy) return;
   setBusy(true);
@@ -301,60 +543,40 @@ async function joinRoom() {
     myName = getName();
     const code = $("roomIn").value.trim().toUpperCase();
     if (code.length !== 4) throw new Error("Enter the 4-character room code.");
-    dbg("Looking for room " + code);
     const snap = await get(ref(db, "rooms/" + code));
-    if (!snap.exists()) throw new Error("Room " + code + " was not found. Check the code, and make sure the host is still on the lobby screen.");
+    if (!snap.exists()) throw new Error("Room " + code + " was not found. Check the code, and make sure the host is still online.");
     const r = snap.val();
-    if ((r.phase || "lobby") !== "lobby") throw new Error("The game has already started (phase: " + r.phase + ").");
+    if ((r.phase || "lobby") !== "lobby") throw new Error("This game has already started. Ask the host for a new round.");
     const pl = r.players || {};
     if (Object.keys(pl).length >= MAX) throw new Error("This room is full (6 players).");
     myName = uniqueName(myName, pl);
-    await set(ref(db, "rooms/" + code + "/players/" + playerId), { name: myName, joinedAt: Date.now() });
-    roomCode = code; isHost = false; leaving = false;
+    await set(ref(db, "rooms/" + code + "/players/" + playerId), {name: myName, joinedAt: Date.now(), score: 0, correct: 0});
+    roomCode = code; isHost = false; leaving = false; phase = "lobby";
     await armPresence();
     history.replaceState({}, "", inviteUrl(code));
-    listen(code);
-    notice("Joined room " + code + " as " + myName, true);
-  } catch (e) {
-    roomCode = null;
-    notice(e.message || "Could not join the room.");
-  }
+    listen(code); notice("Joined room " + code + " as " + myName, true);
+  } catch (e) { roomCode = null; notice(e.message || "Could not join the room."); }
   setBusy(false);
 }
-
-function roomClosed() {
-  if (stopListen) stopListen();
-  stopListen = null; roomCode = null; players = {}; phase = "-";
+function cleanup() {
+  if (stopListen) stopListen(); stopListen = null; stopTick();
+  clearTimeout(revTimer); clearTimeout(nextTimer);
+  roomCode = null; isHost = false; players = {}; phase = "-"; game = null; armedLobby = false;
+  revSched = -1; nextSched = -1; renderedRound = -1; myAns = {round: -1, c: -1};
   $("dRoom").textContent = "-"; $("dPhase").textContent = "-";
   history.replaceState({}, "", location.pathname);
-  show("closed");
 }
-
+function roomClosed(msg) { cleanup(); $("closedMsg").textContent = msg; show("closed"); }
 async function leaveRoom() {
   if (!roomCode) { show("home"); return; }
   leaving = true;
   const code = roomCode, host = isHost;
-  if (stopListen) stopListen();
-  stopListen = null;
   try {
     if (host) await remove(ref(db, "rooms/" + code));
     else await remove(ref(db, "rooms/" + code + "/players/" + playerId));
   } catch (e) { notice("Could not leave cleanly: " + e.message); }
-  roomCode = null; isHost = false; players = {}; phase = "-";
-  $("dRoom").textContent = "-"; $("dPhase").textContent = "-";
-  history.replaceState({}, "", location.pathname);
-  leaving = false;
-  show("home");
+  cleanup(); leaving = false; show("home");
 }
-
-async function startGame() {
-  if (!roomCode || !isHost || Object.keys(players).length < 2) return;
-  $("startBtn").disabled = true;
-  try {
-    await update(ref(db, "rooms/" + roomCode), { phase: "playing" });
-  } catch (e) { notice("Could not start: " + e.message); $("startBtn").disabled = false; }
-}
-
 async function copyInvite() {
   const link = inviteUrl(roomCode);
   try { await navigator.clipboard.writeText(link); notice("Invite link copied.", true); }
@@ -362,7 +584,7 @@ async function copyInvite() {
 }
 async function shareInvite() {
   if (navigator.share) {
-    try { await navigator.share({ title: "Circuit Clash", text: "Join my quiz room. Code: " + roomCode, url: inviteUrl(roomCode) }); }
+    try { await navigator.share({title: "Circuit Clash", text: "Join my quiz room. Code: " + roomCode, url: inviteUrl(roomCode)}); }
     catch (e) { if (e.name !== "AbortError") copyInvite(); }
   } else copyInvite();
 }
@@ -370,16 +592,15 @@ async function shareInvite() {
 $("createBtn").addEventListener("click", createRoom);
 $("joinBtn").addEventListener("click", joinRoom);
 $("startBtn").addEventListener("click", startGame);
+$("nextBtn").addEventListener("click", doNext);
+$("againBtn").addEventListener("click", playAgain);
 $("leaveBtn").addEventListener("click", leaveRoom);
-$("leave2").addEventListener("click", leaveRoom);
-$("homeBtn").addEventListener("click", function () { show("home"); });
+$("leave3").addEventListener("click", leaveRoom);
+$("homeBtn").addEventListener("click", () => show("home"));
 $("copyBtn").addEventListener("click", copyInvite);
 $("shareBtn").addEventListener("click", shareInvite);
-$("roomIn").addEventListener("input", function (e) {
-  e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 4);
-});
-$("roomIn").addEventListener("keydown", function (e) { if (e.key === "Enter") joinRoom(); });
-
+$("roomIn").addEventListener("input", e => { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 4); });
+$("roomIn").addEventListener("keydown", e => { if (e.key === "Enter") joinRoom(); });
 const urlRoom = new URLSearchParams(location.search).get("room");
 if (urlRoom) { $("roomIn").value = urlRoom.toUpperCase().slice(0, 4); $("name").focus(); }
 </script>
